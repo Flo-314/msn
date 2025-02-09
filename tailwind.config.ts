@@ -8,6 +8,9 @@ export default {
   ],
   theme: {
     extend: {
+      textColor: {
+        darkLabel: "#132fc4",
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
