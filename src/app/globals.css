@@ -27,15 +27,6 @@ body {
 
 
 
-input[type="checkbox"]:checked {
-appearance: none;  
-  background-color: red;
-}
-
-input[type="checkbox"]:checked::after {
-    font-size: 12px;
-    color: black;
-
-    background-color: red;
-
+input[type="checkbox"] {
+  accent-color: aliceblue;
 }

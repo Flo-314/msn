@@ -10,13 +10,18 @@ export default {
     extend: {
       textColor: {
         darkLabel: "#0b2194",
+        msnGray: "#A3A3A3",
       },
       borderColor: {
-        inputGray: "#7B9EC7",
+        inputGray: "#EFF5FF",
+        dark: "#ACC4EA",
       },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        msnGray: "#EFF5FF",
+        msnLightGray: "#DFE8F6",
+        msnDarkGray: "#ACC4EA",
       },
     },
   },
