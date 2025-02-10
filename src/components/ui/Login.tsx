@@ -53,29 +53,35 @@ function LoginForm() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [status, setStatus] = useState("online")
-  
+    const [isLogging, setIsLogging] =useState(false)
     const handleSubmit = (e: React.FormEvent) => {
       e.preventDefault()
-      // Handle login logic here
+      setIsLogging(!isLogging)
     }
     return (
         
-        <form onSubmit={handleSubmit} className="space-y-1">
-        <div className="space-y-1">
+        <form onSubmit={handleSubmit} className="">
+        <div className="mb-1">
           <label htmlFor="email" className="text-xs    text-darkLabel">
-            E-mail address:
+            Cuenta de correo electrónico: 
           </label>
+          <div className="flex justify-center items-center gap-0.5">
           <input
             id="email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded  px-2 py-1 text-sm  focus:outline-none"
+            className="w-full px-1 py-0.5 text-sm   bg-none border border-inputGray"
           />
+          <button className="text-center text-sm p-0.5  border border-inputGray">▼</button>
+          </div>
+          
         </div>
 
-        <div className="space-y-1">
-          <label htmlFor="password" className="text-sm text-[#000F35]">
+        <div className="">
+ 
+          
+          <label htmlFor="password" className="text-xs    text-darkLabel">
             Password:
           </label>
           <input
@@ -83,19 +89,20 @@ function LoginForm() {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded border border-[#7B9EC7] px-2 py-1 text-sm focus:border-[#003797] focus:outline-none"
+            
+            className="w-full  border border-inputGray px-1 py-1 text-sm "
           />
         </div>
 
-        <div className="space-y-1">
-          <label htmlFor="status" className="text-sm text-[#000F35]">
+        <div className="flex items-center text-darkLabel text-sm">
+          <label htmlFor="status" className=" ">
             Status:
           </label>
           <select
             id="status"
             value={status}
             onChange={(e) => setStatus(e.target.value)}
-            className="w-full rounded border border-[#7B9EC7] bg-white px-2 py-1 text-sm focus:border-[#003797] focus:outline-none"
+            className=" bg-transparent "
           >
             <option value="online">Online</option>
             <option value="busy">Busy</option>
@@ -104,7 +111,8 @@ function LoginForm() {
           </select>
         </div>
 
-        <div className="space-y-2 text-sm">
+        
+        {isLogging ? <div className="max-w-16 my-3.5 mx-auto" > <img src="/login.gif" ></img> </div> :   <div className=" text-sm my-3.5">
           <div className="flex items-center gap-2">
             <input type="checkbox" id="remember" className="h-4 w-4 rounded border-[#7B9EC7]" />
             <label htmlFor="remember" className="text-[#000F35]">
@@ -126,13 +134,16 @@ function LoginForm() {
             </label>
           </div>
         </div>
+  }
+       
+
 
         <div className="flex justify-center">
           <button
             type="submit"
             className="rounded border border-[#7B9EC7] bg-gradient-to-b from-[#FEFEFE] to-[#E2E2E2] px-8 py-1 text-sm text-[#000F35] hover:from-[#E2E2E2] hover:to-[#FEFEFE] active:from-[#E2E2E2] active:to-[#E2E2E2]"
           >
-            Sign In
+           {isLogging ? "Cancelar" : "Iniciar sesión"} 
           </button>
         </div>
       </form>

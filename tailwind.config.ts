@@ -9,7 +9,10 @@ export default {
   theme: {
     extend: {
       textColor: {
-        darkLabel: "#132fc4",
+        darkLabel: "#0b2194",
+      },
+      borderColor: {
+        inputGray: "#7B9EC7",
       },
       colors: {
         background: "var(--background)",
