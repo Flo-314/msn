@@ -35,7 +35,8 @@ export default function Home() {
       <ZIndexProvider>
         {/*       <Window></Window>
       <Window></Window>
-<Login ></Login> */}
+ */}
+        <Login></Login>
         <Window>
           <div
             style={{
