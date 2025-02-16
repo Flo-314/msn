@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Window from "../common/Window";
+import Window from "../../lib/common/Window";
 import Image from "next/image";
 
 export default function Login() {

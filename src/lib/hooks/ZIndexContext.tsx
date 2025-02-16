@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 // context/ZIndexContext.tsx
 import React, { createContext, useContext, useState, ReactNode } from "react";
@@ -10,9 +10,6 @@ interface ZIndexContextType {
 interface ZIndexProviderProps {
   children: ReactNode;
 }
-
-
-
 
 const ZIndexContext = createContext<ZIndexContextType | undefined>(undefined);
 

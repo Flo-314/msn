@@ -1,6 +1,6 @@
-import Window from "@/components/common/Window";
-import Login from "@/components/ui/Login";
-import { ZIndexProvider } from "@/lib/ZIndexContext";
+import Window from "@/lib/common/Window";
+import Login from "@/modules/login/Login";
+import { ZIndexProvider } from "@/lib/hooks/ZIndexContext";
 import Image from "next/image";
 const contacts = [
   { name: "JK", status: "Online" },
