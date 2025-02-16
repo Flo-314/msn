@@ -1,6 +1,16 @@
 "use client";
 
-// context/ZIndexContext.tsx
+/*
+ * Global context for managing Z-index in a multi-window interface.
+
+ * context  controls the stacking order of windows with a Zindex counter.
+ * whenever a window is clicked, its Z-index increases, ensuring it appears top.
+ * 
+ * Usage:
+ * 1. Wrap the application with `<ZIndexProvider>`.
+ * 2. Use `useZIndex()` whenever yo need modify or read the Z-index.
+ */
+
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
 interface ZIndexContextType {
