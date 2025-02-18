@@ -1,7 +1,6 @@
 import Login from "@/modules/login/Login";
 import { ZIndexProvider } from "@/lib/hooks/ZIndexContext";
 import Chat from "@/modules/chat/chat";
-import Mensagger from "@/modules/mensagger/mensagger";
 
 export default function Home() {
   return (
@@ -14,7 +13,7 @@ export default function Home() {
       <ZIndexProvider>
         {/*     <Login></Login>
         <Mensagger></Mensagger> */}
-
+        <Login></Login>
         <Chat></Chat>
       </ZIndexProvider>
     </div>

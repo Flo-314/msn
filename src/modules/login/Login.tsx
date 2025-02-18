@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Window from "../../lib/common/Window";
 import Image from "next/image";
+import { login, signup } from "@/app/test/actions";
 
 export default function Login() {
   return (
@@ -54,7 +55,6 @@ function LoginForm() {
   const [status, setStatus] = useState("online");
   const [isLogging, setIsLogging] = useState(false);
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
     setIsLogging(!isLogging);
   };
   return (
@@ -151,10 +151,19 @@ function LoginForm() {
 
       <div className="flex justify-center">
         <button
+          formAction={signup}
           type="submit"
           className="rounded border border-[#7B9EC7] bg-gradient-to-b from-[#FEFEFE] to-[#E2E2E2] px-8 py-1 text-sm text-[#000F35] hover:from-[#E2E2E2] hover:to-[#FEFEFE] active:from-[#E2E2E2] active:to-[#E2E2E2]"
         >
           {isLogging ? "Cancelar" : "Iniciar sesión"}
+        </button>
+
+        <button
+          formAction={login}
+          type="submit"
+          className="rounded border border-[#7B9EC7] bg-gradient-to-b from-[#FEFEFE] to-[#E2E2E2] px-8 py-1 text-sm text-[#000F35] hover:from-[#E2E2E2] hover:to-[#FEFEFE] active:from-[#E2E2E2] active:to-[#E2E2E2]"
+        >
+          {isLogging ? "FFFFFFFFFFFFFFFF" : "FFFFFFFFFFFFFFFFFFFF"}
         </button>
       </div>
     </form>
