@@ -149,21 +149,21 @@ function LoginForm() {
         </div>
       )}
 
-      <div className="flex justify-center">
+      <div className="flex">
         <button
           formAction={signup}
           type="submit"
           className="rounded border border-[#7B9EC7] bg-gradient-to-b from-[#FEFEFE] to-[#E2E2E2] px-8 py-1 text-sm text-[#000F35] hover:from-[#E2E2E2] hover:to-[#FEFEFE] active:from-[#E2E2E2] active:to-[#E2E2E2]"
         >
-          {isLogging ? "Cancelar" : "Iniciar sesión"}
+          {isLogging ? "Cancelar" : "signup"}
         </button>
 
         <button
           formAction={login}
           type="submit"
-          className="rounded border border-[#7B9EC7] bg-gradient-to-b from-[#FEFEFE] to-[#E2E2E2] px-8 py-1 text-sm text-[#000F35] hover:from-[#E2E2E2] hover:to-[#FEFEFE] active:from-[#E2E2E2] active:to-[#E2E2E2]"
+          className="rounded border  border-[#7B9EC7] bg-gradient-to-b from-[#FEFEFE] to-[#E2E2E2] px-8 py-1 text-sm text-[#000F35] hover:from-[#E2E2E2] hover:to-[#FEFEFE] active:from-[#E2E2E2] active:to-[#E2E2E2]"
         >
-          {isLogging ? "FFFFFFFFFFFFFFFF" : "FFFFFFFFFFFFFFFFFFFF"}
+          {isLogging ? "CANCELAR EL login" : "login"}
         </button>
       </div>
     </form>

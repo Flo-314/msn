@@ -4,14 +4,3 @@
 
 
 
-.normal-gradient {
-    background: linear-gradient(to bottom, #CBDFFF 0%, #E2EDFF 18%, #EFF5FF 100%);
-  }
-  
-  .threed-gradient {
-    background: linear-gradient(to bottom, #EFF5FF 0%, #E2EDFF 87%, #CBDFFF 100%);
-  }
-  
-  .dark-gradient {
-    background: linear-gradient(to bottom, #CCDFFF 0%, #92B1E6 100%);
-  }
