@@ -11,15 +11,14 @@ export async function login(formData: FormData) {
     email: formData.get("email") as string,
     password: formData.get("password") as string,
   };
-  data.email = "assd@gmail.com";
-  data.password = "abcdefg123";
+
   const { error } = await supabase.auth.signInWithPassword(data);
-  console.log(data, error);
+  if (error) return null;
+  return await supabase.auth.getUser();
 }
 
 export async function signup(formData: FormData) {
   const supabase = await createClient();
-  console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 
   // type-casting here for convenience
   // in practice, you should validate your inputs
@@ -27,15 +26,11 @@ export async function signup(formData: FormData) {
     email: formData.get("email") as string,
     password: formData.get("password") as string,
   };
+  console.log(formData, data);
 
-  data.email = "assd@gmail.com";
-  data.password = "abcdefg123";
   const { error } = await supabase.auth.signUp(data);
 
   if (error) {
     console.log(error);
   }
-
-  /*   revalidatePath("/", "layout");
-  redirect("/"); */
 }

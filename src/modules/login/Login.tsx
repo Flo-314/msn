@@ -4,34 +4,39 @@ import { useState } from "react";
 import Window from "../../lib/common/Window";
 import Image from "next/image";
 import { login, signup } from "@/app/test/actions";
+import { useUser } from "@/lib/hooks/userContext";
+import Mensagger from "../mensagger/mensagger";
 
 export default function Login() {
+  const { user } = useUser();
+
+  console.log(user);
   return (
-    <Window childrenName="MSN">
-      <div
-        style={{
-          background:
-            "linear-gradient(to top, rgba(255, 255, 255, 1) 0%, rgba(208, 221, 240, 1) 50%, rgba(255, 255, 255, 1) 100%)",
-        }}
-        className="mx-auto max-w-md p-2  rounded-sm "
-      >
-        <LoginTop></LoginTop>
-        <div className="flex flex-col justify-center items-center">
-          <div className="border-[1px] border-gray-500 rounded-lg bg-[#FEFEFE]">
-            <Image
-              alt="msnLogin"
-              src={"/msnpersonlogo.png"}
-              width={"120"}
-              height={"120"}
-            ></Image>
+    <div>
+      {user ? (
+        <Mensagger></Mensagger>
+      ) : (
+        <Window childrenName="MSN">
+          <div className="mx-auto max-w-md p-2  rounded-sm bg-backforth-gradient ">
+            <LoginTop></LoginTop>
+            <div className="flex flex-col justify-center items-center">
+              <div className="border-[1px] border-gray-500 rounded-lg bg-[#FEFEFE]">
+                <Image
+                  alt="msnLogin"
+                  src={"/msnpersonlogo.png"}
+                  width={"120"}
+                  height={"120"}
+                ></Image>
+              </div>
+
+              <LoginForm></LoginForm>
+            </div>
+
+            <LoginFooter></LoginFooter>
           </div>
-
-          <LoginForm></LoginForm>
-        </div>
-
-        <LoginFooter></LoginFooter>
-      </div>
-    </Window>
+        </Window>
+      )}
+    </div>
   );
 }
 
@@ -54,7 +59,9 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState("online");
   const [isLogging, setIsLogging] = useState(false);
-  const handleSubmit = (e: React.FormEvent) => {
+  const { setUser } = useUser();
+
+  const handleSubmit = () => {
     setIsLogging(!isLogging);
   };
   return (
@@ -67,6 +74,7 @@ function LoginForm() {
           <input
             id="email"
             type="email"
+            name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full px-1 py-0.5 text-sm   bg-none border border-inputGray"
@@ -82,6 +90,7 @@ function LoginForm() {
           Password:
         </label>
         <input
+          name="password"
           id="password"
           type="password"
           value={password}
@@ -159,7 +168,12 @@ function LoginForm() {
         </button>
 
         <button
-          formAction={login}
+          formAction={async (formdata) => {
+            const log = await login(formdata);
+            if (log?.data?.user) setUser(log.data.user);
+
+            console.log(log);
+          }}
           type="submit"
           className="rounded border  border-[#7B9EC7] bg-gradient-to-b from-[#FEFEFE] to-[#E2E2E2] px-8 py-1 text-sm text-[#000F35] hover:from-[#E2E2E2] hover:to-[#FEFEFE] active:from-[#E2E2E2] active:to-[#E2E2E2]"
         >

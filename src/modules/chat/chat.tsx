@@ -1,63 +1,60 @@
 "use client";
 import Window from "@/lib/common/Window";
-import { createClient } from "@/lib/utils/supabase/client";
+import { Message, User } from "@/types/types";
 import usePartySocket from "partysocket/react";
-import { useEffect, useState } from "react";
-const supabase = createClient();
-const getChatRoomId = (userId1: string, userId2: string): string => {
-  const [id1, id2] = [userId1, userId2].sort();
+import { useState } from "react";
+interface ChatProps {
+  user: User;
+  room: string;
+}
 
-  return `${id1}-${id2}`;
-};
-
-function Chat() {
-  const [user, setUser] = useState<any>(null);
+function Chat({ user, room }: ChatProps) {
   const [text, setText] = useState("");
-  const [mesagges, setMesagges] = useState([]);
-  useEffect(() => {
-    const fetchUser = async () => {
-      const { data } = await supabase.auth.getUser();
-      setUser(data.user);
-    };
-
-    fetchUser();
-  }, []);
+  const [mesagges, setMessages] = useState<Message[]>([]);
 
   const ws = usePartySocket({
-    // usePartySocket takes the same arguments as PartySocket.
     host: "localhost:1999", // or localhost:1999 in dev
-    room: "asd",
-    // in addition, you can provide socket lifecycle event handlers
-    // (equivalent to using ws.addEventListener in an effect hook)
-    onOpen() {
-      console.log("openeado");
-    },
-    onMessage(e) {},
-    onClose() {
-      console.log("closed");
-    },
-    onError() {
-      console.log("error");
+    room: room,
+
+    onMessage(messageEvent) {
+      try {
+        const message: Message = JSON.parse(messageEvent.data);
+
+        if (message.type === "chatMessage") {
+          setMessages((prev) => [...prev, message]);
+        }
+      } catch {}
     },
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
   };
+
+  const handleSend = () => {
+    if (!text.trim()) return;
+
+    const newMessage: Message = {
+      senderId: user.id, // Usa el `id` del usuario
+      message: text,
+      type: "chatMessage",
+    };
+
+    ws.send(JSON.stringify(newMessage)); // Asegura que se envíe en JSON
+    setMessages((prev) => [...prev, newMessage]);
+    setText("");
+  };
   return (
     <div>
       <Window>
         {mesagges.map((mesagge, i) => (
-          <div key={i}>{mesagge}</div>
+          <div key={i} className="flex gap-4">
+            <p className="text-white">{mesagge.senderId} : </p>
+            <p>{mesagge.message}</p>
+          </div>
         ))}
         <textarea value={text} onChange={handleChange} />
-        <button
-          onClick={() => {
-            ws.send(text);
-          }}
-        >
-          enviar
-        </button>
+        <button onClick={handleSend}>enviar</button>
       </Window>
     </div>
   );
