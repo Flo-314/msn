@@ -12,7 +12,6 @@ interface ChatProps {
 function Chat({ userId, contactId }: ChatProps) {
   const [text, setText] = useState("");
   const [mesagges, setMessages] = useState<Message[]>([]);
-  console.log(contactId, userId);
   const ws = usePartySocket({
     host: "localhost:1999", // or localhost:1999 in dev
     room: getChatRoomId(userId, contactId),
@@ -20,9 +19,8 @@ function Chat({ userId, contactId }: ChatProps) {
     onMessage(messageEvent) {
       try {
         const message: Message = JSON.parse(messageEvent.data);
-
         if (message.type === "chatMessage") {
-          setMessages((prev) => [...prev, message]);
+          setMessages((prev) => [...prev, JSON.parse(message.message)]);
         }
       } catch {}
     },

@@ -7,7 +7,7 @@ import Chat from "../chat/chat";
 function Mensagger({ user }) {
   const [contacts, setContacts] = useState([]);
   const [TESTEMAIL, SETTESTEMAIL] = useState("");
-  const [openChats, setOpenChats] = useState<string[]>([]);
+  const [isOpenChat, setIsOpenChat] = useState<boolean>();
 
   useEffect(() => {
     if (user) {
@@ -113,15 +113,8 @@ function Mensagger({ user }) {
                   <div className="overflow-y-scroll max-h-96 bg-white">
                     {contacts.map((contact, index) => (
                       <div key={index + 1}>
-                        <p>contact id {contact.contact_id}</p>
-                        <p>user id {user.id}</p>
-                        {contact.contact_id && (
-                          <Chat
-                            key={index}
-                            userId={user.id}
-                            contactId={contact.contact_id}
-                          ></Chat>
-                        )}
+                        <p>user id {contact.contact_id}</p>
+                        <p>user id</p> {user.id}
                       </div>
 
                       /*    <div
@@ -142,6 +135,16 @@ function Mensagger({ user }) {
                         </div>
                       </div> */
                     ))}
+
+                    {isOpenChat && (
+                      <Chat
+                        userId={user.id}
+                        contactId={contacts[0].contact_id}
+                      ></Chat>
+                    )}
+                    <button onClick={() => setIsOpenChat(!isOpenChat)}>
+                      open{" "}
+                    </button>
                   </div>
 
                   {/* cuadrado de propaganda */}
