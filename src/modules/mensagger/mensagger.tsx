@@ -1,29 +1,22 @@
 import Window from "@/lib/common/Window";
+import { addContact, getContacts } from "@/lib/supabase/models";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import Chat from "../chat/chat";
 
-function Mensagger() {
-  const contacts = [
-    { name: "JK", status: "Online" },
-    { name: "Samuel Prashker", status: "Busy" },
-    { name: "advisor2@live.co.uk", status: "Offline" },
-    { name: "Azn Angel", status: "Offline" },
-    { name: "Chitra", status: "Offline" },
-    { name: "Chris", status: "Offline" },
-    { name: "Dane", status: "Offline" },
-    { name: "David", status: "Offline" },
-    { name: "Dominic", status: "Offline" },
-    { name: "Doris", status: "Offline" },
-    { name: "Esteban Monge", status: "Offline" },
-    { name: "Chris", status: "Offline" },
-    { name: "Dane", status: "Offline" },
-    { name: "David", status: "Offline" },
-    { name: "Dominic", status: "Offline" },
-    { name: "Doris", status: "Offline" },
-    { name: "Esteban Monge", status: "Offline" },
-    { name: "Harrison", status: "Offline" },
-    { name: "Harrison Hoffman", status: "Offline" },
-  ];
+function Mensagger({ user }) {
+  const [contacts, setContacts] = useState([]);
+  const [TESTEMAIL, SETTESTEMAIL] = useState("");
+  const [openChats, setOpenChats] = useState<string[]>([]);
 
+  useEffect(() => {
+    if (user) {
+      getContacts(user.id).then((contacts) => {
+        setContacts(contacts);
+        console.log(contacts);
+      });
+    }
+  }, [user]);
   return (
     <Window>
       <div
@@ -100,7 +93,18 @@ function Mensagger() {
                       "linear-gradient(to top, #EFF5FF 0%, #EFF5FF 15%, #ACC4EA 100%)",
                   }}
                 >
-                  <p>Add a contact</p>
+                  <p
+                    onClick={() => {
+                      addContact(user.id, TESTEMAIL);
+                    }}
+                  >
+                    Add a contact
+                  </p>
+                  <input
+                    type="text"
+                    value={TESTEMAIL}
+                    onChange={(e) => SETTESTEMAIL(e.target.value)}
+                  />
                   {/* imagen */}
                   <div></div>
                 </div>
@@ -108,7 +112,19 @@ function Mensagger() {
                   {/*  rectangulo de contactos*/}
                   <div className="overflow-y-scroll max-h-96 bg-white">
                     {contacts.map((contact, index) => (
-                      <div
+                      <div key={index + 1}>
+                        <p>contact id {contact.contact_id}</p>
+                        <p>user id {user.id}</p>
+                        {contact.contact_id && (
+                          <Chat
+                            key={index}
+                            userId={user.id}
+                            contactId={contact.contact_id}
+                          ></Chat>
+                        )}
+                      </div>
+
+                      /*    <div
                         key={index}
                         className="flex items-center gap-2 p-1  rounded"
                       >
@@ -119,12 +135,12 @@ function Mensagger() {
                           height={16}
                         />
                         <div className="text-sm">
-                          <span className="text-gray-800">{contact.name}</span>
+                          <span className="text-gray-800">{contact.email}</span>
                           <span className="text-gray-500 ml-1">
-                            ({contact.status})
+                            {contact.username}
                           </span>
                         </div>
-                      </div>
+                      </div> */
                     ))}
                   </div>
 

@@ -1,5 +1,6 @@
 "use client";
 import Window from "@/lib/common/Window";
+import { getChatRoomId } from "@/lib/utils/partykit/partykitUtils";
 import { Message, User } from "@/types/types";
 import usePartySocket from "partysocket/react";
 import { useState } from "react";
@@ -8,13 +9,13 @@ interface ChatProps {
   room: string;
 }
 
-function Chat({ user, room }: ChatProps) {
+function Chat({ userId, contactId }: ChatProps) {
   const [text, setText] = useState("");
   const [mesagges, setMessages] = useState<Message[]>([]);
-
+  console.log(contactId, userId);
   const ws = usePartySocket({
     host: "localhost:1999", // or localhost:1999 in dev
-    room: room,
+    room: getChatRoomId(userId, contactId),
 
     onMessage(messageEvent) {
       try {
@@ -35,7 +36,7 @@ function Chat({ user, room }: ChatProps) {
     if (!text.trim()) return;
 
     const newMessage: Message = {
-      senderId: user.id, // Usa el `id` del usuario
+      senderId: userId, // Usa el `id` del usuario
       message: text,
       type: "chatMessage",
     };

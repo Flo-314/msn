@@ -1,12 +1,13 @@
-import { createServerClient } from "@supabase/ssr";
+import { createServerClient as sbssr } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { createClient as ssbCreateClient } from "@supabase/supabase-js";
 
 export async function createClient() {
   const cookieStore = await cookies();
 
-  return createServerClient(
+  return sbssr(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    process.env.supabase_private_key!,
     {
       cookies: {
         getAll() {
@@ -25,5 +26,12 @@ export async function createClient() {
         },
       },
     }
+  );
+}
+
+export async function createServerClient() {
+  return await ssbCreateClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.supabase_private_key!
   );
 }

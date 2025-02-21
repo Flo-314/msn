@@ -2,7 +2,6 @@
 
 import { useUser } from "@/lib/hooks/userContext";
 import Login from "./login/Login";
-import Chat from "./chat/chat";
 import Mensagger from "./mensagger/mensagger";
 
 function MsnMensaggerApp() {
@@ -12,8 +11,7 @@ function MsnMensaggerApp() {
     <div>
       {user ? (
         <div>
-          <Chat></Chat>
-          <Mensagger></Mensagger>
+          <Mensagger user={user}></Mensagger>
         </div>
       ) : (
         <Login></Login>
