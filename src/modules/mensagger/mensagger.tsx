@@ -11,10 +11,11 @@ function Mensagger({ user }) {
   const [isOpenChat, setIsOpenChat] = useState<boolean>(false);
 
   useEffect(() => {
-    console.log("HOLAA");
     if (user) {
       getContacts(user.id).then((contacts) => {
         setContacts(contacts);
+
+        console.log(contacts)
       });
     }
   }, [user]);
@@ -129,7 +130,7 @@ function Mensagger({ user }) {
                   <div className="overflow-y-scroll max-h-96 bg-white">
                     {contacts.map((contact, index) => (
                       <div key={index + 1}>
-                        <p>user id {contact.contact_id}</p>
+                        <p>user id {contact.contactId}</p>
                       </div>
 
                       /*    <div
@@ -154,7 +155,7 @@ function Mensagger({ user }) {
                     {isOpenChat && (
                       <Chat
                         userId={user.id}
-                        contactId={contacts[0].contact_id}
+                        contactId={contacts[0].contactId}
                       ></Chat>
                     )}
                     <button
@@ -163,7 +164,7 @@ function Mensagger({ user }) {
                           JSON.stringify({
                             type: "chatToggle",
                             opened: !isOpenChat,
-                            contactId: contacts[0].contact_id,
+                            contactId: contacts[0].contactId,
                           }),
                         );
                         setIsOpenChat(!isOpenChat);

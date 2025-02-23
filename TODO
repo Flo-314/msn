@@ -1,0 +1,11 @@
+REFACTORS:
+
+
+FEATURES:
+    
+
+
+
+Posibles bugs:
+    Cuando se abre un chat, mensagger envia una señal para que se sepa que este chat esta abierto. si <Chat> se cierra 
+    inesperadamente no tiene forma de mandar una señal para que sepa qeu se cerro el chat.

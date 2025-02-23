@@ -4,18 +4,28 @@ import MsnMensaggerApp from "@/modules/msnMensaggerApp";
 
 export default function Home() {
   /* radial-gradient(circle at center, #A0BAFD 0%, #1A3BE4 100%) */
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
   return (
-    <div
+                       <div
       className="min-h-screen w-full "
       style={{
         background: `gray`,
       }}
     >
-      <UserProvider>
-        <ZIndexProvider>
+      <ZIndexProvider>
+
+        <UserProvider>
           <MsnMensaggerApp></MsnMensaggerApp>
-        </ZIndexProvider>
-      </UserProvider>
+
+        </UserProvider>
+      </ZIndexProvider>
     </div>
   );
 }

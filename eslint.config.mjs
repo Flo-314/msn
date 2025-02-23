@@ -10,7 +10,19 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
+  ...compat.config({
+
+    extends: (["next/core-web-vitals", "next/typescript", "prettier"]),
+    rules: {      
+      "padding-line-between-statements": [
+        "warn",
+        {blankLine: "always", prev: "*", next: ["return", "export"]},
+        {blankLine: "always", prev: ["const", "let", "var"], next: "*"},
+        {blankLine: "any", prev: ["const", "let", "var"], next: ["const", "let", "var"]},
+      ],
+      "no-console": "warn",
+    },
+  })
 ];
 
 export default eslintConfig;

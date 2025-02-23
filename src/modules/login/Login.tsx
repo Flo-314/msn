@@ -5,17 +5,12 @@ import Window from "../../lib/common/Window";
 import Image from "next/image";
 import { login, signup } from "@/app/test/actions";
 import { useUser } from "@/lib/hooks/userContext";
-import Mensagger from "../mensagger/mensagger";
 
 export default function Login() {
-  const { user } = useUser();
 
-  console.log(user);
   return (
     <div>
-      {user ? (
-        <Mensagger></Mensagger>
-      ) : (
+   
         <Window childrenName="MSN">
           <div className="mx-auto max-w-md p-2  rounded-sm bg-backforth-gradient ">
             <LoginTop></LoginTop>
@@ -35,7 +30,7 @@ export default function Login() {
             <LoginFooter></LoginFooter>
           </div>
         </Window>
-      )}
+    
     </div>
   );
 }

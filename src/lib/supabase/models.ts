@@ -57,7 +57,11 @@ export async function getContacts(userId: string) {
 
   const contactData = data.map((contact) => {
     const { profiles, ...rest } = contact;
-    return { ...profiles, ...rest };
+    const cleanedContact = { ...profiles, ...rest };
+    cleanedContact["contactId"] = cleanedContact["contact_id"];
+    delete cleanedContact["contact_id"];
+
+    return cleanedContact;
   });
 
   return contactData;
