@@ -11,7 +11,7 @@
  * 2. Use `useZIndex()` whenever yo need modify or read the Z-index.
  */
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, {createContext, useContext, useState, ReactNode} from "react";
 
 interface ZIndexContextType {
   zIndex: number;
@@ -23,7 +23,7 @@ interface ZIndexProviderProps {
 
 const ZIndexContext = createContext<ZIndexContextType | undefined>(undefined);
 
-export const ZIndexProvider: React.FC<ZIndexProviderProps> = ({ children }) => {
+export const ZIndexProvider: React.FC<ZIndexProviderProps> = ({children}) => {
   const [zIndex, setZIndex] = useState(1);
 
   const incrementZIndex = () => {
@@ -31,16 +31,16 @@ export const ZIndexProvider: React.FC<ZIndexProviderProps> = ({ children }) => {
   };
 
   return (
-    <ZIndexContext.Provider value={{ zIndex, incrementZIndex }}>
-      {children}
-    </ZIndexContext.Provider>
+    <ZIndexContext.Provider value={{zIndex, incrementZIndex}}>{children}</ZIndexContext.Provider>
   );
 };
 
 export const useZIndex = (): ZIndexContextType => {
   const context = useContext(ZIndexContext);
+
   if (!context) {
     throw new Error("useZIndex must be used within a ZIndexProvider");
   }
+
   return context;
 };
