@@ -1,29 +1,5 @@
-import { Message } from "@/types/types";
 import type * as Party from "partykit/server";
 
-export default class Server implements Party.Server {
-  constructor(readonly room: Party.Room) {}
-
-  onConnect(conn: Party.Connection, ctx: Party.ConnectionContext) {
-    // A websocket just connected!
-    console.log(
-      `Connected:
-  id: ${conn.id}
-  room: ${this.room.id}
-  url: ${new URL(ctx.request.url).pathname}`
-    );
-
-    // let's send a message to the connection
-  }
-
-  onMessage(message: string, sender: Party.Connection) {
-    const msg: Message = { senderId: sender.id, message, type: "chatMessage" };
-    this.room.broadcast(
-      JSON.stringify(msg),
-      // ...except for the connection it came from
-      [sender.id]
-    );
-  }
+export default class PartyServer {
+  constructor(public party: Party.Server) {}
 }
-
-Server satisfies Party.Worker;

@@ -3,6 +3,7 @@ import { addContact, getContacts } from "@/lib/supabase/models";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import Chat from "../chat/chat";
+import usePartySocket from "partysocket/react";
 
 function Mensagger({ user }) {
   const [contacts, setContacts] = useState([]);
@@ -10,6 +11,7 @@ function Mensagger({ user }) {
   const [isOpenChat, setIsOpenChat] = useState<boolean>();
 
   useEffect(() => {
+    console.log("HOLAA");
     if (user) {
       getContacts(user.id).then((contacts) => {
         setContacts(contacts);
@@ -17,6 +19,17 @@ function Mensagger({ user }) {
       });
     }
   }, [user]);
+  const contactNotificationSocket = usePartySocket({
+    host: "localhost:1999", // or localhost:1999 in dev
+    party: "notifications",
+    room: user.id,
+
+    onMessage(event) {
+      window.prompt(event.data);
+      console.log(event.data);
+    },
+  });
+
   return (
     <Window>
       <div
@@ -114,7 +127,6 @@ function Mensagger({ user }) {
                     {contacts.map((contact, index) => (
                       <div key={index + 1}>
                         <p>user id {contact.contact_id}</p>
-                        <p>user id</p> {user.id}
                       </div>
 
                       /*    <div

@@ -1,5 +1,6 @@
 "use server";
 
+import { UUID } from "crypto";
 import { createServerClient } from "../utils/supabase/server";
 
 export async function getProfileById(id: string) {
@@ -62,4 +63,21 @@ export async function getContacts(userId: string) {
   });
 
   return contactData;
+}
+
+export async function insertMessage(
+  userId: UUID,
+  contactId: UUID,
+  message: string
+) {
+  const supabase = await createServerClient();
+  const { data, error } = await supabase
+    .from("messages")
+    .insert([{ user_id: userId, contact_id: contactId, message }]);
+
+  if (error) {
+    console.log(error);
+  }
+
+  return data;
 }

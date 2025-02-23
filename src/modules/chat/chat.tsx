@@ -1,19 +1,22 @@
 "use client";
 import Window from "@/lib/common/Window";
+import { insertMessage } from "@/lib/supabase/models";
 import { getChatRoomId } from "@/lib/utils/partykit/partykitUtils";
-import { Message, User } from "@/types/types";
+import { Message } from "@/types/types";
+import { UUID } from "crypto";
 import usePartySocket from "partysocket/react";
 import { useState } from "react";
 interface ChatProps {
-  user: User;
-  room: string;
+  userId: UUID;
+  contactId: UUID;
 }
 
 function Chat({ userId, contactId }: ChatProps) {
   const [text, setText] = useState("");
   const [mesagges, setMessages] = useState<Message[]>([]);
-  const ws = usePartySocket({
+  const chatPartySocket = usePartySocket({
     host: "localhost:1999", // or localhost:1999 in dev
+    party: "chat",
     room: getChatRoomId(userId, contactId),
 
     onMessage(messageEvent) {
@@ -25,6 +28,11 @@ function Chat({ userId, contactId }: ChatProps) {
       } catch {}
     },
   });
+  const contactNotificationSocket = usePartySocket({
+    host: "localhost:1999", // or localhost:1999 in dev
+    party: "notifications",
+    room: contactId,
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
@@ -34,12 +42,16 @@ function Chat({ userId, contactId }: ChatProps) {
     if (!text.trim()) return;
 
     const newMessage: Message = {
-      senderId: userId, // Usa el `id` del usuario
+      senderId: userId,
       message: text,
       type: "chatMessage",
     };
 
-    ws.send(JSON.stringify(newMessage)); // Asegura que se envíe en JSON
+    chatPartySocket.send(JSON.stringify(newMessage));
+    contactNotificationSocket.send(JSON.stringify(newMessage));
+
+    insertMessage(userId, contactId, text);
+
     setMessages((prev) => [...prev, newMessage]);
     setText("");
   };
