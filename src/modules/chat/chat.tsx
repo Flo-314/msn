@@ -18,20 +18,22 @@ function Chat({ userId, contactId }: ChatProps) {
     host: "localhost:1999", // or localhost:1999 in dev
     party: "chat",
     room: getChatRoomId(userId, contactId),
-
+    id: userId,
     onMessage(messageEvent) {
       try {
         const message: Message = JSON.parse(messageEvent.data);
-        if (message.type === "chatMessage") {
+        if (message.type === "new_message") {
           setMessages((prev) => [...prev, JSON.parse(message.message)]);
         }
       } catch {}
     },
   });
+
   const contactNotificationSocket = usePartySocket({
     host: "localhost:1999", // or localhost:1999 in dev
     party: "notifications",
     room: contactId,
+    id: userId,
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {

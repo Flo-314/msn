@@ -8,25 +8,28 @@ import usePartySocket from "partysocket/react";
 function Mensagger({ user }) {
   const [contacts, setContacts] = useState([]);
   const [TESTEMAIL, SETTESTEMAIL] = useState("");
-  const [isOpenChat, setIsOpenChat] = useState<boolean>();
+  const [isOpenChat, setIsOpenChat] = useState<boolean>(false);
 
   useEffect(() => {
     console.log("HOLAA");
     if (user) {
       getContacts(user.id).then((contacts) => {
         setContacts(contacts);
-        console.log(contacts);
       });
     }
   }, [user]);
+
   const contactNotificationSocket = usePartySocket({
     host: "localhost:1999", // or localhost:1999 in dev
     party: "notifications",
     room: user.id,
+    id: user.id,
 
-    onMessage(event) {
-      window.prompt(event.data);
-      console.log(event.data);
+    onMessage(messageEvent) {
+      const message = JSON.parse(messageEvent.data);
+      console.log(message);
+
+      window.alert("TE LLEGO UN MENSAJE:" + message.message);
     },
   });
 
@@ -154,7 +157,18 @@ function Mensagger({ user }) {
                         contactId={contacts[0].contact_id}
                       ></Chat>
                     )}
-                    <button onClick={() => setIsOpenChat(!isOpenChat)}>
+                    <button
+                      onClick={() => {
+                        contactNotificationSocket.send(
+                          JSON.stringify({
+                            type: "chatToggle",
+                            opened: !isOpenChat,
+                            contactId: contacts[0].contact_id,
+                          }),
+                        );
+                        setIsOpenChat(!isOpenChat);
+                      }}
+                    >
                       open{" "}
                     </button>
                   </div>

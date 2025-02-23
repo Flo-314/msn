@@ -44,12 +44,10 @@ export async function addContact(userId: string, contactEmail: string) {
 }
 export async function getContacts(userId: string) {
   const supabase = await createServerClient();
-
-  const { data, error } = await supabase
-    .from("contacts")
-    .select("contact_id, profiles:contact_id(email, username)")
-    .eq("user_id", userId)
-    .order("created_at", { ascending: false });
+  console.log(userId);
+  const { data, error } = await supabase.rpc("get_contacts", {
+    user_uuid: userId,
+  });
 
   console.log(data, userId);
   if (error) {

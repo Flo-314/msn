@@ -13,7 +13,7 @@ NOTIFICATIONS:
 import { UUID } from "crypto";
 import type * as Party from "partykit/server";
 type MessageNotification = {
-  type: "new_message";
+  type: "chatMessage";
   contactId: UUID;
   message: string;
 };
@@ -30,24 +30,25 @@ export default class Server implements Party.Server {
   constructor(readonly room: Party.Room) {}
 
   onMessage(message: string, sender: Party.Connection) {
-    let connection = this.room.getConnection(this.room.id);
-    connection?.send(
-      "CCCCCCCCCCCCAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-    );
-    console.log("connection", connection, this.room.id);
-
+    const connection = this.room.getConnection(this.room.id);
     const parsedMsg: MessageNotification | chatToggleNotification =
       JSON.parse(message);
-    if (parsedMsg.type === "new_message") {
-      let connection = this.room.getConnection(this.room.name);
 
-      console.log("connection");
+    if (parsedMsg.type === "chatMessage") {
+      const isChatOppened = this.openedChats.includes(sender.id);
+      console.log(this.openedChats, sender.id);
+      if (isChatOppened) {
+        console.log("chat abierto");
+      } else {
+        console.log("chat cerrado, manda notificacion");
+        connection?.send(message);
+      }
     } else if (parsedMsg.type === "chatToggle") {
       if (parsedMsg.opened === true) {
-        this.openedChats.push(sender.id);
+        this.openedChats.push(parsedMsg.contactId);
       } else {
         this.openedChats = this.openedChats.filter(
-          (senderId) => senderId !== sender.id
+          (senderId) => senderId !== parsedMsg.contactId
         );
       }
     }
