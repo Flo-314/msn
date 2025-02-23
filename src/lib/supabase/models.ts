@@ -2,8 +2,9 @@
 
 import { UUID } from "crypto";
 import { createServerClient } from "../utils/supabase/server";
+import { Contact } from "@/types/types";
 
-export async function getProfileById(id: string) {
+export async function getProfileById(id: UUID | string) {
   const supabase = await createServerClient();
 
   const { data, error } = await supabase
@@ -13,63 +14,63 @@ export async function getProfileById(id: string) {
     .single();
 
   if (error) throw new Error(error.message);
+
   return data;
 }
-export async function addContact(userId: string, contactEmail: string) {
+
+export async function addContact(userId: UUID | string, contactEmail: string) {
   const supabase = await createServerClient();
-  console.log(userId, contactEmail);
+
   const { data: contactProfiles, error: contactError } = await supabase
     .from("profiles")
     .select("id")
     .eq("email", contactEmail)
     .single();
+
   if (contactError || !contactProfiles) {
-    console.error(new Error("Contacto no encontrado."));
+    return
   }
 
-  const contactId = contactProfiles?.id;
+  const contactId = contactProfiles.id;
 
-  const { data, error } = await supabase.from("contacts").insert([
+  const { data, error } = await supabase.from("contacts").insert(
     {
       user_id: userId,
       contact_id: contactId,
       status: "pending", // Puede ser 'pending', 'accepted', etc.
     },
-  ]);
+  );
+
   if (error) {
-    console.log(error);
   }
 
   return data;
 }
+
 export async function getContacts(userId: string) {
   const supabase = await createServerClient();
-  console.log(userId);
+
   const { data, error } = await supabase.rpc("get_contacts", {
     user_uuid: userId,
   });
 
-  console.log(data, userId);
   if (error) {
-    console.error(error);
+
     return null;
   }
 
-  const contactData = data.map((contact) => {
-    const { profiles, ...rest } = contact;
-    const cleanedContact = { ...profiles, ...rest };
-    cleanedContact["contactId"] = cleanedContact["contact_id"];
-    delete cleanedContact["contact_id"];
-
-    return cleanedContact;
-  });
+  const contactData: Contact[] = data.map((contact) => ({
+    contactId: contact.contact_id,
+    email: contact.email,
+    username: contact.username,
+  }));
 
   return contactData;
 }
 
 export async function insertMessage(
-  userId: UUID,
-  contactId: UUID,
+  userId: UUID |string,
+  contactId: UUID | string,
   message: string
 ) {
   const supabase = await createServerClient();
@@ -78,7 +79,6 @@ export async function insertMessage(
     .insert([{ user_id: userId, contact_id: contactId, message }]);
 
   if (error) {
-    console.log(error);
   }
 
   return data;

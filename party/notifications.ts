@@ -36,11 +36,12 @@ export default class Server implements Party.Server {
 
     if (parsedMsg.type === "chatMessage") {
       const isChatOppened = this.openedChats.includes(sender.id);
-      console.log(this.openedChats, sender.id);
+
       if (isChatOppened) {
-        console.log("chat abierto");
+
+
       } else {
-        console.log("chat cerrado, manda notificacion");
+        //closed chat; send notification to user of incoming msg
         connection?.send(message);
       }
     } else if (parsedMsg.type === "chatToggle") {

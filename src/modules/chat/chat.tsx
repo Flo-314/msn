@@ -1,17 +1,17 @@
 "use client";
 import Window from "@/lib/common/Window";
-import { insertMessage } from "@/lib/supabase/models";
-import { getChatRoomId } from "@/lib/utils/partykit/partykitUtils";
-import { Message } from "@/types/types";
-import { UUID } from "crypto";
+import {insertMessage} from "@/lib/supabase/models";
+import {getChatRoomId} from "@/lib/utils/partykit/partykitUtils";
+import {Message} from "@/types/types";
+import {UUID} from "crypto";
 import usePartySocket from "partysocket/react";
-import { useState } from "react";
+import {useState} from "react";
 interface ChatProps {
-  userId: UUID;
-  contactId: UUID;
+  userId: UUID | string;
+  contactId: UUID | string;
 }
 
-function Chat({ userId, contactId }: ChatProps) {
+function Chat({userId, contactId}: ChatProps) {
   const [text, setText] = useState("");
   const [mesagges, setMessages] = useState<Message[]>([]);
   const chatPartySocket = usePartySocket({
@@ -22,7 +22,8 @@ function Chat({ userId, contactId }: ChatProps) {
     onMessage(messageEvent) {
       try {
         const message: Message = JSON.parse(messageEvent.data);
-        if (message.type === "new_message") {
+
+        if (message.type === "chatMessage") {
           setMessages((prev) => [...prev, JSON.parse(message.message)]);
         }
       } catch {}
@@ -57,6 +58,7 @@ function Chat({ userId, contactId }: ChatProps) {
     setMessages((prev) => [...prev, newMessage]);
     setText("");
   };
+
   return (
     <div>
       <Window>

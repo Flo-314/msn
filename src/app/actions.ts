@@ -13,7 +13,9 @@ export async function login(formData: FormData) {
   };
 
   const { error } = await supabase.auth.signInWithPassword(data);
+
   if (error) return null;
+
   return await supabase.auth.getUser();
 }
 
@@ -26,11 +28,10 @@ export async function signup(formData: FormData) {
     email: formData.get("email") as string,
     password: formData.get("password") as string,
   };
-  console.log(formData, data);
+
 
   const { error } = await supabase.auth.signUp(data);
 
   if (error) {
-    console.log(error);
   }
 }
