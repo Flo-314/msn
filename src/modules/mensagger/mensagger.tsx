@@ -12,6 +12,7 @@ import {UUID} from "crypto";
 import {useChatInstances} from "@/lib/hooks/chatsContext";
 import {supabase} from "@/lib/utils/supabase/client";
 import {RealtimeChannel} from "@supabase/supabase-js";
+import {partykitUrl} from "@/lib/utils/partykit/partykitUtils";
 
 function Mensagger({user}: {user: User}) {
   const [contacts, setContacts] = useState<Contact[]>([]);
