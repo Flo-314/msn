@@ -4,6 +4,7 @@ import {insertMessage} from "@/lib/supabase/models";
 import {getChatRoomId} from "@/lib/utils/partykit/partykitUtils";
 import {Message} from "@/types/types";
 import {UUID} from "crypto";
+import Image from "next/image";
 import usePartySocket from "partysocket/react";
 import {useState} from "react";
 interface ChatProps {
@@ -29,7 +30,6 @@ function Chat({userId, contactId}: ChatProps) {
       } catch {}
     },
   });
-
   const contactNotificationSocket = usePartySocket({
     host: "localhost:1999", // or localhost:1999 in dev
     party: "notifications",
@@ -60,18 +60,67 @@ function Chat({userId, contactId}: ChatProps) {
   };
 
   return (
-    <div>
-      <Window>
-        {mesagges.map((mesagge, i) => (
-          <div key={i} className="flex gap-4">
-            <p className="text-white">{mesagge.senderId} : </p>
-            <p>{mesagge.message}</p>
+    <Window>
+      <div className="w-[500px] border border-[#2454C5] shadow-lg rounded-t overflow-hidden bg-[#ECE9D8]">
+        <div className="flex">
+          <div className="flex-1 p-2">
+            <div className="">
+              <label className="text-sm mb-1 block">To:</label>
+            </div>
+
+            <div className="bg-white border border-[#999] h-[200px] rounded mb-4">
+              {mesagges.map((mesagge, i) => (
+                <div key={i} className="flex gap-4">
+                  <p className="text-winBlue text-wrap">{mesagge.senderId} : </p>
+                  <p className="text-violet-950 text-wrap">{mesagge.message}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Formatting Toolbar */}
+            <div className="flex items-center gap-2 mb-2">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+
+            {/* Input Area */}
+            <div className="flex gap-2">
+              <textarea value={text} onChange={handleChange} />
+              <div className="space-y-1">
+                <button
+                  onClick={() => {
+                    handleSend();
+                  }}
+                  className="w-16 bg-gradient-to-b from-[#FFF] to-[#E3E3E3] border border-[#999] text-black hover:from-[#E3E3E3] hover:to-[#E3E3E3]"
+                >
+                  Send
+                </button>
+                <button className="w-16 bg-gradient-to-b from-[#FFF] to-[#E3E3E3] border border-[#999] text-black hover:from-[#E3E3E3] hover:to-[#E3E3E3]">
+                  Search
+                </button>
+              </div>
+            </div>
           </div>
-        ))}
-        <textarea value={text} onChange={handleChange} />
-        <button onClick={handleSend}>enviar</button>
-      </Window>
-    </div>
+          <div className="flex  flex-col gap-36 p-2">
+            <div className="border-2 border-msnDarkGray">
+              <Image
+                src="/msnpersonlogo.png"
+                alt="Avatar"
+                width={80}
+                height={80}
+                className="rounded"
+              />
+            </div>
+
+            <div className=" border-2 border-msnDarkGray">
+              <Image src="/dog.webp" alt="Duck Avatar" width={80} height={80} className="rounded" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </Window>
   );
 }
 

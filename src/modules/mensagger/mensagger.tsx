@@ -1,6 +1,6 @@
 import Window from "@/lib/common/Window";
 import {getContacts} from "@/lib/supabase/models";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import usePartySocket from "partysocket/react";
 import UserHeader from "./userHeader/UserHeader";
 import AddContactButton from "./contactList/addContactButton";
@@ -11,36 +11,46 @@ import {ChatInstance, Contact, User} from "@/types/types";
 import {UUID} from "crypto";
 import {useChatInstances} from "@/lib/hooks/chatsContext";
 import {supabase} from "@/lib/utils/supabase/client";
+import {RealtimeChannel} from "@supabase/supabase-js";
 
 function Mensagger({user}: {user: User}) {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const {setChatInstances, chatInstances} = useChatInstances();
 
   useEffect(() => {
-    if (user) {
-      getContacts(user.id).then((contacts) => {
-        if (contacts) {
-          setContacts(contacts);
-          const contactsIds = contacts.map((contact) => contact.contactId);
-          const filter = `user_id=in.(${contactsIds.join(",")})`;
+    if (!user) return;
 
-          console.log(filter);
-          supabase
-            .channel("statusChanges")
-            .on(
-              "postgres_changes",
-              {
-                event: "*",
-                schema: "public",
-                table: "user_status",
-                filter,
-              },
-              (payload) => console.log(payload.new),
-            )
-            .subscribe();
-        }
-      });
-    }
+    let statusChannel: RealtimeChannel | null = null;
+
+    const fetchContacts = async () => {
+      const contacts = await getContacts(user.id);
+
+      if (!contacts) return;
+
+      setContacts(contacts);
+      const contactsIds = contacts.map((contact) => contact.contactId);
+      const filter = `user_id=in.(${contactsIds.join(",")})`;
+
+      statusChannel = supabase
+        .channel("statusChanges")
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "user_status",
+            filter,
+          },
+          (payload) => console.log(payload.new),
+        )
+        .subscribe();
+    };
+
+    fetchContacts();
+
+    return () => {
+      statusChannel?.unsubscribe();
+    };
   }, [user]);
 
   const contactNotificationSocket = usePartySocket({
@@ -62,6 +72,7 @@ function Mensagger({user}: {user: User}) {
       return cInstance.userId === chatInstance.userId && cInstance.contactId === contactId;
     });
 
+    //if the chat isnt open, it opens one and send a notification of the event to the websocket.
     if (!isChatOpen) {
       setChatInstances([...chatInstances, chatInstance]);
       contactNotificationSocket.send(
@@ -72,7 +83,7 @@ function Mensagger({user}: {user: User}) {
         }),
       );
     } else {
-      //TODO: Delete this. a window should be closed by the cross button
+      //if the chat is open we close the chat. the event notification is sended in the component ondestroy
       setChatInstances(
         chatInstances.filter(
           (cInstance) =>
