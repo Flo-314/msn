@@ -1,7 +1,7 @@
 "use client";
 import Window from "@/lib/common/Window";
 import {insertMessage} from "@/lib/supabase/models";
-import {getChatRoomId} from "@/lib/utils/partykit/partykitUtils";
+import {getChatRoomId, partykitUrl} from "@/lib/utils/partykit/partykitUtils";
 import {Message} from "@/types/types";
 import {UUID} from "crypto";
 import Image from "next/image";
@@ -16,7 +16,7 @@ function Chat({userId, contactId}: ChatProps) {
   const [text, setText] = useState("");
   const [mesagges, setMessages] = useState<Message[]>([]);
   const chatPartySocket = usePartySocket({
-    host: "localhost:1999", // or localhost:1999 in dev
+    host: partykitUrl,
     party: "chat",
     room: getChatRoomId(userId, contactId),
     id: userId,
@@ -31,7 +31,7 @@ function Chat({userId, contactId}: ChatProps) {
     },
   });
   const contactNotificationSocket = usePartySocket({
-    host: "localhost:1999", // or localhost:1999 in dev
+    host: partykitUrl,
     party: "notifications",
     room: contactId,
     id: userId,

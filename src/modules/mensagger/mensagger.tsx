@@ -54,7 +54,7 @@ function Mensagger({user}: {user: User}) {
   }, [user]);
 
   const contactNotificationSocket = usePartySocket({
-    host: "localhost:1999", // or localhost:1999 in dev
+    host: partykitUrl,
     party: "notifications",
     room: user.id,
     id: user.id,
