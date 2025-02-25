@@ -5,5 +5,5 @@ export const getChatRoomId = (userId1: string, userId2: string): string => {
 };
 
 export const partykitUrl = process.env.NEXT_IS_DEV
-  ? partykitUrl,
+  ? "localhost:1999"
   : process.env.NEXT_PUBLIC_PARTYKIT_URL;
