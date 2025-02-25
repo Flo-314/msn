@@ -10,6 +10,7 @@ import Inbox from "./Inbox";
 import {ChatInstance, Contact, User} from "@/types/types";
 import {UUID} from "crypto";
 import {useChatInstances} from "@/lib/hooks/chatsContext";
+import {supabase} from "@/lib/utils/supabase/client";
 
 function Mensagger({user}: {user: User}) {
   const [contacts, setContacts] = useState<Contact[]>([]);
@@ -18,7 +19,26 @@ function Mensagger({user}: {user: User}) {
   useEffect(() => {
     if (user) {
       getContacts(user.id).then((contacts) => {
-        if (contacts) setContacts(contacts);
+        if (contacts) {
+          setContacts(contacts);
+          const contactsIds = contacts.map((contact) => contact.contactId);
+          const filter = `user_id=in.(${contactsIds.join(",")})`;
+
+          console.log(filter);
+          supabase
+            .channel("statusChanges")
+            .on(
+              "postgres_changes",
+              {
+                event: "*",
+                schema: "public",
+                table: "user_status",
+                filter,
+              },
+              (payload) => console.log(payload.new),
+            )
+            .subscribe();
+        }
       });
     }
   }, [user]);

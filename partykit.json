@@ -5,6 +5,7 @@
   "compatibilityDate": "2025-02-17",
   "parties": {
     "chat": "party/chat.ts",
+
     "notifications": "party/notifications.ts"
   }
 }

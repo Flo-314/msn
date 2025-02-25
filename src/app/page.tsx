@@ -1,3 +1,4 @@
+import {SessionProvider} from "@/lib/hooks/SessionContext";
 import {ZIndexProvider} from "@/lib/hooks/ZIndexContext";
 import {ChatsInstancesProvider} from "@/lib/hooks/chatsContext";
 import {ContactsProvider} from "@/lib/hooks/contactsContext";
@@ -16,11 +17,13 @@ export default function Home() {
     >
       <ZIndexProvider>
         <UserProvider>
-          <ContactsProvider>
-            <ChatsInstancesProvider>
-              <MsnMensaggerApp></MsnMensaggerApp>
-            </ChatsInstancesProvider>
-          </ContactsProvider>
+          <SessionProvider>
+            <ContactsProvider>
+              <ChatsInstancesProvider>
+                <MsnMensaggerApp></MsnMensaggerApp>
+              </ChatsInstancesProvider>
+            </ContactsProvider>
+          </SessionProvider>
         </UserProvider>
       </ZIndexProvider>
     </div>

@@ -3,7 +3,7 @@
 import {useState} from "react";
 import Window from "../../lib/common/Window";
 import Image from "next/image";
-import {login, signup} from "@/app/actions";
+import {signIn, signup} from "@/lib/supabase/auth";
 import {useUser} from "@/lib/hooks/userContext";
 import {User} from "@/types/types";
 
@@ -41,8 +41,8 @@ function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState("online");
+  const [autoLogin, setAutoLogin] = useState(false);
   const [isLogging, setIsLogging] = useState(false);
-  const {setUser} = useUser();
 
   const handleSubmit = () => {
     setIsLogging(!isLogging);
@@ -100,7 +100,7 @@ function LoginForm() {
 
       {isLogging ? (
         <div className="max-w-16 my-3.5 mx-auto">
-          <img src="/login.gif" />
+          <Image height={100} width={100} src="/login.gif" alt="login loadin" />
         </div>
       ) : (
         <div className=" text-sm my-3.5">
@@ -123,7 +123,15 @@ function LoginForm() {
           </div>
 
           <div className="flex items-center gap-2">
-            <input type="checkbox" id="auto-login" className="h-4 w-4 rounded border-[#7B9EC7]" />
+            <input
+              name="auto-login"
+              type="checkbox"
+              id="auto-login"
+              onChange={(e) => {
+                setAutoLogin(e.target.checked);
+              }}
+              className="h-4 w-4 rounded border-[#7B9EC7]"
+            />
             <label htmlFor="auto-login" className="text-[#000F35]">
               Sign me in automatically
             </label>
@@ -141,11 +149,7 @@ function LoginForm() {
         </button>
 
         <button
-          formAction={async (formdata) => {
-            const log = await login(formdata);
-
-            if (log?.data?.user) setUser(log.data.user as User | null);
-          }}
+          formAction={signIn}
           type="submit"
           className="rounded border  border-[#7B9EC7] bg-gradient-to-b from-[#FEFEFE] to-[#E2E2E2] px-8 py-1 text-sm text-[#000F35] hover:from-[#E2E2E2] hover:to-[#FEFEFE] active:from-[#E2E2E2] active:to-[#E2E2E2]"
         >

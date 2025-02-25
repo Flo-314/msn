@@ -12,6 +12,7 @@ function MsnMensaggerApp() {
 
   return (
     <div>
+      <button onClick={Login}></button>
       {user ? (
         <div>
           <Mensagger user={user}></Mensagger>

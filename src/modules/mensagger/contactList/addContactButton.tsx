@@ -2,7 +2,7 @@ import {addContact} from "@/lib/supabase/models";
 import {UUID} from "crypto";
 import {useState} from "react";
 
-function AddContactButton({userId}: {userId: UUID}) {
+function AddContactButton({userId}: {userId: UUID | string}) {
   const [email, setEmail] = useState("");
 
   return (
