@@ -4,8 +4,6 @@ import {useState} from "react";
 import Window from "../../lib/common/Window";
 import Image from "next/image";
 import {signIn, signup} from "@/lib/supabase/auth";
-import {useUser} from "@/lib/hooks/userContext";
-import {User} from "@/types/types";
 
 export default function Login() {
   return (
@@ -41,8 +39,8 @@ function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState("online");
-  const [autoLogin, setAutoLogin] = useState(false);
-  const [isLogging, setIsLogging] = useState(false);
+  /*   const [_, setAutoLogin] = useState(false);
+   */ const [isLogging, setIsLogging] = useState(false);
 
   const handleSubmit = () => {
     setIsLogging(!isLogging);
@@ -127,8 +125,9 @@ function LoginForm() {
               name="auto-login"
               type="checkbox"
               id="auto-login"
-              onChange={(e) => {
-                setAutoLogin(e.target.checked);
+              onChange={() => {
+                /*                 setAutoLogin(e.target.checked);
+                 */
               }}
               className="h-4 w-4 rounded border-[#7B9EC7]"
             />

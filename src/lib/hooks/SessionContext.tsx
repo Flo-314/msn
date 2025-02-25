@@ -14,14 +14,14 @@ const SessionContext = createContext<{
 
 export const SessionProvider = ({children}: {children: ReactNode}) => {
   const [session, setSession] = useState<Session | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const {setUser} = useUser();
+  /*   const [_, setIsLoading] = useState(true);
+   */ const {setUser} = useUser();
 
   useEffect(() => {
     const authStateListener = supabase.auth.onAuthStateChange(async (_, session) => {
       setSession(session);
-      setIsLoading(false);
-      const user = session?.user;
+      /*       setIsLoading(false);
+       */ const user = session?.user;
 
       if (user?.id && user?.email) {
         setUser({id: user.id, email: user.email});

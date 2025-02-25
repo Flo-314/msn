@@ -1,6 +1,6 @@
 import Window from "@/lib/common/Window";
 import {getContacts} from "@/lib/supabase/models";
-import {useCallback, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import usePartySocket from "partysocket/react";
 import UserHeader from "./userHeader/UserHeader";
 import AddContactButton from "./contactList/addContactButton";
