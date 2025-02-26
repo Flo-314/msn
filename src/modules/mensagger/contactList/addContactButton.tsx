@@ -1,9 +1,11 @@
+import {useContacts} from "@/lib/hooks/contactsContext";
 import {addContact} from "@/lib/supabase/models";
 import {UUID} from "crypto";
 import {useState} from "react";
 
 function AddContactButton({userId}: {userId: UUID | string}) {
   const [email, setEmail] = useState("");
+  const {setContacts} = useContacts();
 
   return (
     <div
@@ -13,8 +15,12 @@ function AddContactButton({userId}: {userId: UUID | string}) {
       }}
     >
       <p
-        onClick={() => {
-          addContact(userId, email);
+        onClick={async () => {
+          const contact = await addContact(userId, email);
+
+          if (contact) {
+            setContacts((prev) => [...prev, contact]);
+          }
         }}
       >
         Add a contact

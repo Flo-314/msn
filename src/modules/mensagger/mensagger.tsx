@@ -1,21 +1,22 @@
 import Window from "@/lib/common/Window";
 import {getContacts} from "@/lib/supabase/models";
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import usePartySocket from "partysocket/react";
 import UserHeader from "./userHeader/UserHeader";
 import AddContactButton from "./contactList/addContactButton";
 import ContactList from "./contactList/contactList";
 import Ad from "./Ad";
 import Inbox from "./Inbox";
-import {ChatInstance, Contact, User} from "@/types/types";
+import {ChatInstance, User} from "@/types/types";
 import {UUID} from "crypto";
 import {useChatInstances} from "@/lib/hooks/chatsContext";
 import {supabase} from "@/lib/utils/supabase/client";
 import {RealtimeChannel} from "@supabase/supabase-js";
 import {partykitUrl} from "@/lib/utils/partykit/partykitUtils";
+import {useContacts} from "@/lib/hooks/contactsContext";
 
 function Mensagger({user}: {user: User}) {
-  const [contacts, setContacts] = useState<Contact[]>([]);
+  const {contacts, setContacts} = useContacts();
   const {setChatInstances, chatInstances} = useChatInstances();
 
   useEffect(() => {
@@ -52,7 +53,7 @@ function Mensagger({user}: {user: User}) {
     return () => {
       statusChannel?.unsubscribe();
     };
-  }, [user]);
+  }, [user, setContacts]);
 
   const contactNotificationSocket = usePartySocket({
     host: partykitUrl,

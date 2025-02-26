@@ -10,29 +10,35 @@ export async function getProfileById(id: UUID | string) {
   return data;
 }
 
-export async function addContact(userId: UUID | string, contactEmail: string) {
+export async function addContact(
+  userId: UUID | string,
+  contactEmail: string,
+): Promise<Contact | null> {
   const {data: contactProfiles, error: contactError} = await supabase
     .from("profiles")
-    .select("id")
+    .select("id, email, username")
     .eq("email", contactEmail)
     .single();
 
   if (contactError || !contactProfiles) {
-    return;
+    return null;
   }
 
   const contactId = contactProfiles.id;
 
-  const {data, error} = await supabase.from("contacts").insert({
+  const {error} = await supabase.from("contacts").insert({
     user_id: userId,
     contact_id: contactId,
     status: "pending", // Puede ser 'pending', 'accepted', etc.
   });
 
   if (error) {
-  }
+    return null;
+  } else {
+    const {id: contactId, ...rest} = contactProfiles;
 
-  return data;
+    return {contactId, ...rest} as Contact;
+  }
 }
 
 export async function getContacts(userId: string) {
