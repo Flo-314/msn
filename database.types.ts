@@ -13,21 +13,18 @@ export type Database = {
         Row: {
           contact_id: string
           created_at: string | null
-          id: string
           status: string | null
           user_id: string
         }
         Insert: {
           contact_id: string
           created_at?: string | null
-          id?: string
           status?: string | null
           user_id: string
         }
         Update: {
           contact_id?: string
           created_at?: string | null
-          id?: string
           status?: string | null
           user_id?: string
         }
@@ -120,23 +117,28 @@ export type Database = {
         }
         Relationships: []
       }
-      users: {
+      user_status: {
         Row: {
-          created_at: string
-          email: string | null
-          id: number
+          status: string
+          user_id: string
         }
         Insert: {
-          created_at?: string
-          email?: string | null
-          id?: number
+          status: string
+          user_id: string
         }
         Update: {
-          created_at?: string
-          email?: string | null
-          id?: number
+          status?: string
+          user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "status_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
@@ -149,16 +151,6 @@ export type Database = {
         }
         Returns: {
           contact_id: string
-          email: string
-          username: string
-        }[]
-      }
-      get_friends: {
-        Args: {
-          user_uuid: string
-        }
-        Returns: {
-          friend_id: string
           email: string
           username: string
         }[]

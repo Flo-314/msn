@@ -1,4 +1,4 @@
-import { UUID } from "crypto";
+import {UUID} from "crypto";
 
 export type User = {
   id: UUID | string;
@@ -7,7 +7,7 @@ export type User = {
 
 export type Message = {
   message: string;
-  senderId: UUID |string;
+  senderId: UUID | string;
   type: string | "chatMessage";
 };
 
@@ -15,9 +15,16 @@ export type Contact = {
   contactId: UUID | string;
   email: string;
   username: string;
-}
+};
 
 export type ChatInstance = {
   userId: string | UUID;
   contactId: string | UUID;
+};
+
+export enum UserStatus {
+  Online = "online",
+  Offline = "offline",
+  Away = "away",
+  Busy = "busy",
 }

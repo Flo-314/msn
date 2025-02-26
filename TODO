@@ -1,6 +1,9 @@
 REFACTORS:
 
-FEATURES: -Que pueda trackear si un contacto esta o no esta conectado. /también otros status
+FEATURES:   
+-
+-Que uno pueda alterar sus propios status
+-Que pueda trackear si un contacto esta o no esta conectado. /también otros status
   -auth check en cada conección a partykit
 
 Posibles bugs:

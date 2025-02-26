@@ -1,4 +1,6 @@
 import {useUser} from "@/lib/hooks/userContext";
+import {updateUserStatus} from "@/lib/supabase/models";
+import {UserStatus} from "@/types/types";
 import Image from "next/image";
 
 function ProfileStatus() {
@@ -14,11 +16,21 @@ function ProfileStatus() {
         <div className="flex">
           <p className="font-bold">{user?.email}</p>
 
-          <select id="status" className=" bg-transparent text-msnGray text-xs">
-            <option value="online">Online</option>
-            <option value="busy">Busy</option>
-            <option value="away">Away</option>
-            <option value="offline">Appear Offline</option>
+          <select
+            onChange={(event) => {
+              const status = event.currentTarget.value as UserStatus;
+
+              if (user) {
+                updateUserStatus(user?.id, status);
+              }
+            }}
+            id="status"
+            className=" bg-transparent text-msnGray text-xs"
+          >
+            <option value={UserStatus.Online}>Online</option>
+            <option value={UserStatus.Busy}>Busy</option>
+            <option value={UserStatus.Away}>Away</option>
+            <option value={UserStatus.Offline}>Appear Offline</option>
           </select>
         </div>
       </div>

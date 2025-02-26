@@ -1,5 +1,5 @@
 import {UUID} from "crypto";
-import {Contact} from "@/types/types";
+import {Contact, UserStatus} from "@/types/types";
 import {supabase} from "../utils/supabase/client";
 
 export async function getProfileById(id: UUID | string) {
@@ -69,6 +69,29 @@ export async function insertMessage(
     .insert([{user_id: userId, contact_id: contactId, message}]);
 
   if (error) {
+  }
+
+  return data;
+}
+
+export async function updateUserStatus(userId: string | UUID, newStatus: UserStatus) {
+  console.log(newStatus);
+  const isValidStatus = (status: UserStatus) => {
+    return Object.values(UserStatus).includes(status);
+  };
+
+  if (isValidStatus(newStatus) === false) {
+    throw new Error("invalid state");
+  }
+
+  const {data, error} = await supabase
+    .from("user_status")
+    .update({status: newStatus})
+    .eq("user_id", userId)
+    .single();
+
+  if (error) {
+    throw error;
   }
 
   return data;
