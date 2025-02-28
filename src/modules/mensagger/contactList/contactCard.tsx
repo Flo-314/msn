@@ -1,29 +1,24 @@
+import {Contact} from "@/types/types";
 import {UUID} from "crypto";
-import Image from "next/image";
+import {StatusIcon} from "./StatusIcon";
 
-function ContactCard({
-  id,
-  email,
-  username,
-  handleOpenChat,
-}: {
-  id: UUID | string;
-  email: string;
-  username: string;
+type ContactCardProps = Contact & {
   handleOpenChat: (contactId: UUID | string) => void;
-}) {
+};
+
+function ContactCard({contactId, email, username, handleOpenChat, status}: ContactCardProps) {
   return (
     <div className="flex items-center gap-2 p-1  rounded">
-      <Image src="/contactIcon.PNG" alt="Contact" width={16} height={16} />
+      <StatusIcon userStatus={status}></StatusIcon>
       <div className="text-sm">
         <span className="text-gray-800">{email}</span>
         <span
           onClick={() => {
-            handleOpenChat(id);
+            handleOpenChat(contactId);
           }}
           className="text-gray-500 ml-1"
         >
-          {id}
+          {contactId}
         </span>
         <span className="text-gray-500 ml-1">{username}</span>
       </div>

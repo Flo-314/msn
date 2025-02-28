@@ -2,9 +2,19 @@ import {useUser} from "@/lib/hooks/userContext";
 import {updateUserStatus} from "@/lib/supabase/models";
 import {UserStatus} from "@/types/types";
 import Image from "next/image";
+import {useEffect, useState} from "react";
 
 function ProfileStatus() {
   const {user} = useUser();
+  const [status, setStatus] = useState<UserStatus>(UserStatus.Online);
+
+  useEffect(() => {
+    const savedStatus = localStorage.getItem("status") as UserStatus;
+
+    if (savedStatus) {
+      setStatus(savedStatus);
+    }
+  }, []);
 
   return (
     <div className="flex gap-4">
@@ -17,6 +27,7 @@ function ProfileStatus() {
           <p className="font-bold">{user?.email}</p>
 
           <select
+            value={status}
             onChange={(event) => {
               const status = event.currentTarget.value as UserStatus;
 

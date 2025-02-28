@@ -1,5 +1,5 @@
 import Window from "@/lib/common/Window";
-import {getContacts} from "@/lib/supabase/models";
+import {getContacts, updateUserStatus} from "@/lib/supabase/models";
 import {useEffect} from "react";
 import usePartySocket from "partysocket/react";
 import UserHeader from "./userHeader/UserHeader";
@@ -7,7 +7,7 @@ import AddContactButton from "./contactList/addContactButton";
 import ContactList from "./contactList/contactList";
 import Ad from "./Ad";
 import Inbox from "./Inbox";
-import {ChatInstance, User} from "@/types/types";
+import {ChatInstance, User, UserStatus} from "@/types/types";
 import {UUID} from "crypto";
 import {useChatInstances} from "@/lib/hooks/chatsContext";
 import {supabase} from "@/lib/utils/supabase/client";
@@ -94,6 +94,15 @@ function Mensagger({user}: {user: User}) {
       );
     }
   };
+
+  // set initial state and cange the status in db
+  useEffect(() => {
+    const savedStatus = localStorage.getItem("status") as UserStatus;
+
+    if (savedStatus) {
+      updateUserStatus(user.id, savedStatus);
+    }
+  }, [user.id]);
 
   return (
     <Window>

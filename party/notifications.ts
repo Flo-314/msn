@@ -10,8 +10,18 @@ NOTIFICATIONS:
 
 */
 
-import { UUID } from "crypto";
+import {createClient} from "@supabase/supabase-js";
+
+import {UUID} from "crypto";
 import type * as Party from "partykit/server";
+import {Database} from "../database.types";
+
+const supabase = createClient<Database>(
+  process.env.NEXT_PUBLIC_SUPABASE_URL as string,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string,
+  {auth: {persistSession: false}},
+);
+
 type MessageNotification = {
   type: "chatMessage";
   contactId: UUID;
@@ -30,28 +40,36 @@ export default class Server implements Party.Server {
   constructor(readonly room: Party.Room) {}
 
   onMessage(message: string, sender: Party.Connection) {
-    const connection = this.room.getConnection(this.room.id);
-    const parsedMsg: MessageNotification | chatToggleNotification =
-      JSON.parse(message);
+    //this is the room owner connection. its the only receptor of data
+    const roomOwnerConnection = this.room.getConnection(this.room.id);
+
+    const parsedMsg: MessageNotification | chatToggleNotification = JSON.parse(message);
 
     if (parsedMsg.type === "chatMessage") {
       const isChatOppened = this.openedChats.includes(sender.id);
 
       if (isChatOppened) {
-
-
       } else {
         //closed chat; send notification to user of incoming msg
-        connection?.send(message);
+        roomOwnerConnection?.send(message);
       }
     } else if (parsedMsg.type === "chatToggle") {
       if (parsedMsg.opened === true) {
         this.openedChats.push(parsedMsg.contactId);
       } else {
-        this.openedChats = this.openedChats.filter(
-          (senderId) => senderId !== parsedMsg.contactId
-        );
+        this.openedChats = this.openedChats.filter((senderId) => senderId !== parsedMsg.contactId);
       }
+    }
+  }
+
+  onClose(connection: Party.Connection): void | Promise<void> {
+    const roomOwnerConnection = this.room.getConnection(this.room.id);
+
+    if (connection.id === roomOwnerConnection?.id) {
+      supabase
+        .from("user_status")
+        .update({status: "offline"})
+        .eq("user_id", roomOwnerConnection.id);
     }
   }
 }

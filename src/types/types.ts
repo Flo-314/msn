@@ -3,6 +3,7 @@ import {UUID} from "crypto";
 export type User = {
   id: UUID | string;
   email: string;
+  state?: UserStatus;
 };
 
 export type Message = {
@@ -15,6 +16,7 @@ export type Contact = {
   contactId: UUID | string;
   email: string;
   username: string;
+  status?: UserStatus;
 };
 
 export type ChatInstance = {

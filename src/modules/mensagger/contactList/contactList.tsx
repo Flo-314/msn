@@ -16,8 +16,9 @@ function ContactList({
           key={index}
           username={contact.username}
           email={contact.email}
-          id={contact.contactId}
+          contactId={contact.contactId}
           handleOpenChat={handleOpenChat}
+          status={contact.status}
         ></ContactCard>
       ))}
     </div>

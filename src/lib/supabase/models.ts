@@ -49,11 +49,11 @@ export async function getContacts(userId: string) {
   if (error) {
     return null;
   }
-
   const contactData: Contact[] = data.map((contact) => ({
     contactId: contact.contact_id,
     email: contact.email,
     username: contact.username,
+    status: contact.status,
   }));
 
   return contactData;
@@ -75,7 +75,6 @@ export async function insertMessage(
 }
 
 export async function updateUserStatus(userId: string | UUID, newStatus: UserStatus) {
-  console.log(newStatus);
   const isValidStatus = (status: UserStatus) => {
     return Object.values(UserStatus).includes(status);
   };

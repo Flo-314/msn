@@ -1,6 +1,6 @@
 "use client";
 
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import Window from "../../lib/common/Window";
 import Image from "next/image";
 import {signIn, signup} from "@/lib/supabase/auth";
@@ -39,12 +39,35 @@ function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState("online");
-  /*   const [_, setAutoLogin] = useState(false);
-   */ const [isLogging, setIsLogging] = useState(false);
+  const [isAutoLogin, setIsAutoLogin] = useState(false);
+  const [isLogging, setIsLogging] = useState(false);
 
   const handleSubmit = () => {
     setIsLogging(!isLogging);
   };
+
+  //load localstorage formdata
+  useEffect(() => {
+    const savedAutoLogin = localStorage.getItem("isAutoLogin");
+    const savedStatus = localStorage.getItem("status");
+
+    if (savedAutoLogin !== null) {
+      setIsAutoLogin(savedAutoLogin === "true");
+    }
+    if (savedStatus) {
+      setStatus(savedStatus);
+    }
+  }, []);
+
+  // Guardar isAutoLogin en localStorage cuando cambie
+  useEffect(() => {
+    localStorage.setItem("isAutoLogin", isAutoLogin.toString());
+  }, [isAutoLogin]);
+
+  // Guardar status en localStorage cuando cambie
+  useEffect(() => {
+    localStorage.setItem("status", status);
+  }, [status]);
 
   return (
     <form onSubmit={handleSubmit} className="">
@@ -126,8 +149,7 @@ function LoginForm() {
               type="checkbox"
               id="auto-login"
               onChange={() => {
-                /*                 setAutoLogin(e.target.checked);
-                 */
+                setIsAutoLogin(!isAutoLogin);
               }}
               className="h-4 w-4 rounded border-[#7B9EC7]"
             />
