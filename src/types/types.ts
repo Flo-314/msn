@@ -9,7 +9,7 @@ export type User = {
 export type Message = {
   message: string;
   senderId: UUID | string;
-  type: string | "chatMessage";
+  type?: "chatMessage";
 };
 
 export type Contact = {

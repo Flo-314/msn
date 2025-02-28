@@ -18,7 +18,7 @@ import {Database} from "../database.types";
 
 const supabase = createClient<Database>(
   process.env.NEXT_PUBLIC_SUPABASE_URL as string,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string,
+  process.env.supabase_private_key as string,
   {auth: {persistSession: false}},
 );
 
@@ -62,14 +62,16 @@ export default class Server implements Party.Server {
     }
   }
 
-  onClose(connection: Party.Connection): void | Promise<void> {
-    const roomOwnerConnection = this.room.getConnection(this.room.id);
-
-    if (connection.id === roomOwnerConnection?.id) {
-      supabase
+  async onClose(connection: Party.Connection): Promise<void> {
+    if (connection.id === this.room?.id) {
+      const request = await supabase
         .from("user_status")
         .update({status: "offline"})
-        .eq("user_id", roomOwnerConnection.id);
+        .eq("user_id", connection.id);
+
+      console.log(request.error);
+      console.log(request.data);
+      console.log(request.status, request.statusText, request.count);
     }
   }
 }

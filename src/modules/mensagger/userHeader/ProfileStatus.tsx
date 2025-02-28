@@ -33,6 +33,7 @@ function ProfileStatus() {
 
               if (user) {
                 updateUserStatus(user?.id, status);
+                setStatus(status);
               }
             }}
             id="status"

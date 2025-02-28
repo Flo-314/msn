@@ -7,7 +7,7 @@ import AddContactButton from "./contactList/addContactButton";
 import ContactList from "./contactList/contactList";
 import Ad from "./Ad";
 import Inbox from "./Inbox";
-import {ChatInstance, User, UserStatus} from "@/types/types";
+import {ChatInstance, Message, User, UserStatus} from "@/types/types";
 import {UUID} from "crypto";
 import {useChatInstances} from "@/lib/hooks/chatsContext";
 import {supabase} from "@/lib/utils/supabase/client";
@@ -33,6 +33,8 @@ function Mensagger({user}: {user: User}) {
       const contactsIds = contacts.map((contact) => contact.contactId);
       const filter = `user_id=in.(${contactsIds.join(",")})`;
 
+      console.log(contacts);
+
       statusChannel = supabase
         .channel("statusChanges")
         .on(
@@ -43,7 +45,21 @@ function Mensagger({user}: {user: User}) {
             table: "user_status",
             filter,
           },
-          (payload) => console.log(payload.new),
+          (payload) => {
+            const {status, user_id} = payload.new as {status: UserStatus; user_id: string};
+
+            setContacts((prevContacts) => {
+              const newContacts = prevContacts.map((contact) => {
+                if (contact.contactId === user_id) {
+                  contact.status = status;
+                }
+
+                return contact;
+              });
+
+              return newContacts;
+            });
+          },
         )
         .subscribe();
     };
@@ -62,9 +78,12 @@ function Mensagger({user}: {user: User}) {
     id: user.id,
 
     onMessage(messageEvent) {
-      const message = JSON.parse(messageEvent.data);
+      const message: Message = JSON.parse(messageEvent.data);
+      const notificationSound = new Audio("/incomingMessage.mp3");
 
-      window.alert("TE LLEGO UN MENSAJE:" + message.message);
+      if (message.type === message.type) {
+        notificationSound.play();
+      }
     },
   });
 
