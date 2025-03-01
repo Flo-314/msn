@@ -1,18 +1,20 @@
-import type { Config } from "tailwindcss";
+import type {Config} from "tailwindcss";
 
 export default {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/modules/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/lib/common/**/*.{js,ts,jsx,tsx,mdx}",
+
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
       backgroundImage: {
-        "normal-gradient":
-          "linear-gradient(to bottom, #CBDFFF 0%, #E2EDFF 18%, #EFF5FF 100%)",
-        "threed-gradient":
-          "linear-gradient(to bottom, #EFF5FF 0%, #E2EDFF 87%, #CBDFFF 100%)",
+        "window-header-gradient":
+          "linear-gradient(#0058EE 0%, #3593FF 5%, #288EFF 7%, #127DFF 9%, #036FFC 11%, #0262EE 15%, #0057E5 20%, #0054E3 25%, #0055EB 50%, #005BF5 65%, #026AFE 75%, #0062EF 85%, #0052D6 90%, #0040AB 95%, #003092 100%)",
+        "normal-gradient": "linear-gradient(to bottom, #CBDFFF 0%, #E2EDFF 18%, #EFF5FF 100%)",
+        "threed-gradient": "linear-gradient(to bottom, #EFF5FF 0%, #E2EDFF 87%, #CBDFFF 100%)",
         "dark-gradient": "linear-gradient(to bottom, #CCDFFF 0%, #92B1E6 100%)",
         "backforth-gradient":
           "linear-gradient(to top, rgba(255, 255, 255, 1) 0%, rgba(208, 221, 240, 1) 50%, rgba(255, 255, 255, 1) 100%)",
@@ -44,6 +46,12 @@ export default {
         negative: "#FF6B2B",
         positive: "#00CC52",
         "positive-dark": "#239E7E",
+      },
+      height: {
+        xpButton: "23px",
+      },
+      width: {
+        xpButton: "23px",
       },
     },
   },

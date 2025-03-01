@@ -51,9 +51,11 @@ function LoginForm() {
     const savedAutoLogin = localStorage.getItem("isAutoLogin");
     const savedStatus = localStorage.getItem("status");
 
-    if (savedAutoLogin !== null) {
-      setIsAutoLogin(savedAutoLogin === "true");
+    if (savedAutoLogin === "true") {
+      setIsAutoLogin(true);
+      setIsLogging(true);
     }
+
     if (savedStatus) {
       setStatus(savedStatus);
     }

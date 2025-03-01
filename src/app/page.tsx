@@ -4,16 +4,13 @@ import {ChatsInstancesProvider} from "@/lib/hooks/chatsContext";
 import {ContactsProvider} from "@/lib/hooks/contactsContext";
 import {UserProvider} from "@/lib/hooks/userContext";
 import MsnMensaggerApp from "@/modules/msnMensaggerApp";
+import "./crtEffect.css";
 
 export default function Home() {
-  /* radial-gradient(circle at center, #A0BAFD 0%, #1A3BE4 100%) */
-
   return (
     <div
-      className="min-h-screen w-full "
-      style={{
-        background: `gray`,
-      }}
+      className="min-h-screen w-full crt "
+      style={{backgroundImage: "url(https://i.imgur.com/Zk6TR5k.jpeg)"}}
     >
       <ZIndexProvider>
         <UserProvider>
