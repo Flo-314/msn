@@ -1,6 +1,7 @@
 "use client";
 import React, {useState} from "react";
 import {useZIndex} from "@/lib/hooks/ZIndexContext";
+import WindowButton from "./WindowButton";
 
 const Window = ({children, childrenName}: {children?: React.ReactNode; childrenName?: string}) => {
   const {zIndex, incrementZIndex} = useZIndex();
@@ -41,37 +42,31 @@ const Window = ({children, childrenName}: {children?: React.ReactNode; childrenN
 
   return (
     <div
+      className="absolute   rounded-t-xl  "
       onClick={handleWindowClick}
       style={{
-        position: "absolute",
         top: position.y,
         left: position.x,
-        boxShadow: "5px 5px 15px rgba(0, 0, 0, 0.2)",
         zIndex: localZIndex,
       }}
     >
-      <div
-        onMouseDown={handleMouseDown}
-        className={`flex items-center justify-between bg-window-header-gradient ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
-      >
-        <div className="flex items-center gap-2">
-          <div className="h-4 w-4 " />
-          <span className="text-sm text-white">{childrenName}</span>
-        </div>
-        <div className="flex gap-1">
-          <button aria-label="Minimize" className="h-xpButton w-xpButton ">
-            _
-          </button>
-          <button aria-label="Maximize" className="h-xpButton w-xpButton  ">
-            □
-          </button>
-          <button aria-label="Close" className="h-xpButton w-xpButton  ">
-            x
-          </button>
+      <div className="">
+        <div
+          onMouseDown={handleMouseDown}
+          className={`flex items-center px-1 rounded-t-lg justify-between bg-window-header-gradient ${isDragging ? "cursor-grabbing" : "cursor-grab"} h-[29px]`}
+        >
+          <div className="flex items-center gap-2">
+            <div className="h-4 w-4 " />
+            <span className="text-sm text-white">{childrenName}</span>
+          </div>
+          <div className="flex gap-1 text-white ">
+            <WindowButton type="minimize"></WindowButton>
+            <WindowButton type="maximize"></WindowButton>
+            <WindowButton type="close"></WindowButton>
+          </div>
         </div>
       </div>
-
-      <div>{children}</div>
+      <div className="px-0.5 pb-0.5 bg-winBlue ">{children}</div>
     </div>
   );
 };

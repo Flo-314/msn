@@ -12,7 +12,7 @@ export default {
     extend: {
       backgroundImage: {
         "window-header-gradient":
-          "linear-gradient(#0058EE 0%, #3593FF 5%, #288EFF 7%, #127DFF 9%, #036FFC 11%, #0262EE 15%, #0057E5 20%, #0054E3 25%, #0055EB 50%, #005BF5 65%, #026AFE 75%, #0062EF 85%, #0052D6 90%, #0040AB 95%, #003092 100%)",
+          "linear-gradient(#0058EE 0%, #3593FF 5%, #288EFF 7%, #127DFF 9%, #036FFC 11%, #0262EE 15%, #0057E5 20%, #0054E3 25%, #0055EB 50%, #005BF5 65%, #026AFE 75%, #0062EF 85%, #0052D6 90%, #0040AB 93%, #003092 100%)",
         "normal-gradient": "linear-gradient(to bottom, #CBDFFF 0%, #E2EDFF 18%, #EFF5FF 100%)",
         "threed-gradient": "linear-gradient(to bottom, #EFF5FF 0%, #E2EDFF 87%, #CBDFFF 100%)",
         "dark-gradient": "linear-gradient(to bottom, #CCDFFF 0%, #92B1E6 100%)",
@@ -41,17 +41,21 @@ export default {
 
         gray: "#DFE8F6",
         "gray-light": "#F3EFFF",
-        winBlue: "#0054E3",
+        winBlue: "#0831d9",
         "negative-dark": "#DD5226",
         negative: "#FF6B2B",
         positive: "#00CC52",
         "positive-dark": "#239E7E",
       },
       height: {
-        xpButton: "23px",
+        xpButton: "21px",
       },
       width: {
-        xpButton: "23px",
+        xpButton: "21px",
+      },
+      borderWidth: {
+        "0.5": "0.5px",
+        "1": "1px",
       },
     },
   },

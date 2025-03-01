@@ -45,6 +45,7 @@ export async function getContacts(userId: string) {
   if (error) {
     return null;
   }
+
   const contactData: Contact[] = data.map((contact) => ({
     contactId: contact.contact_id,
     email: contact.email,
