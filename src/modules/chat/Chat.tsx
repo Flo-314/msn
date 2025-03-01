@@ -3,13 +3,12 @@ import Window from "@/lib/common/Window";
 import {insertMessage} from "@/lib/supabase/models";
 import {getChatRoomId, partykitUrl} from "@/lib/utils/partykit/partykitUtils";
 import {Message} from "@/types/types";
-import {UUID} from "crypto";
 import Image from "next/image";
 import usePartySocket from "partysocket/react";
 import {useState} from "react";
 interface ChatProps {
-  userId: UUID | string;
-  contactId: UUID | string;
+  userId: string;
+  contactId: string;
 }
 
 function Chat({userId, contactId}: ChatProps) {
@@ -45,7 +44,7 @@ function Chat({userId, contactId}: ChatProps) {
     if (!text.trim()) return;
 
     const newMessage: Message = {
-      senderId: userId,
+      contactId: userId,
       message: text,
       type: "chatMessage",
     };
@@ -71,7 +70,7 @@ function Chat({userId, contactId}: ChatProps) {
             <div className="bg-white border border-[#999] h-[200px] rounded mb-4">
               {mesagges.map((mesagge, i) => (
                 <div key={i} className="flex gap-4">
-                  <p className="text-winBlue text-wrap">{mesagge.senderId} : </p>
+                  <p className="text-winBlue text-wrap">{mesagge.contactId} : </p>
                   <p className="text-violet-950 text-wrap">{mesagge.message}</p>
                 </div>
               ))}

@@ -1,9 +1,8 @@
 import {Contact} from "@/types/types";
-import {UUID} from "crypto";
 import {StatusIcon} from "./StatusIcon";
 
 type ContactCardProps = Contact & {
-  handleOpenChat: (contactId: UUID | string) => void;
+  handleOpenChat: (contactId: string) => void;
 };
 
 function ContactCard({contactId, email, username, handleOpenChat, status}: ContactCardProps) {

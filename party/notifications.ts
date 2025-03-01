@@ -1,20 +1,8 @@
-/*  
-STATES: 
-  openedChats: the chats that the user has open.
-
-NOTIFICATIONS:
-  Message notifications:    When a message arrives, if the contactID is not in the open chats, a notification is sent to the user.
-  chatToggle notifications: When a chat is opened the contactID is pushed to the opened chats. user is not gonna receive notifications of a opened chat. 
-                            when a chat is closed the openedchat is popped from it.
-
-
-*/
-
 import {createClient} from "@supabase/supabase-js";
 
-import {UUID} from "crypto";
 import type * as Party from "partykit/server";
 import {Database} from "../database.types";
+import {NotificationMessage} from "@/types/types";
 
 const supabase = createClient<Database>(
   process.env.NEXT_PUBLIC_SUPABASE_URL as string,
@@ -22,56 +10,83 @@ const supabase = createClient<Database>(
   {auth: {persistSession: false}},
 );
 
-type MessageNotification = {
-  type: "chatMessage";
-  contactId: UUID;
-  message: string;
-};
-
-type chatToggleNotification = {
-  type: "chatToggle";
-  contactId: UUID;
-  opened: boolean;
-};
+//Two types of users gonna connect this Instance:
+//
+//  *The Room owner, the only one that receives chat msg notifications.
+//
+//  *The contacts of the room owner. They connect to the room owner Room
+//    to let know the room owner if a msg is sended to him
+//
+//
+//states:
+//  openedChats: When a room owner opens a chat, its ID is saved in the state.
+//
+//notifications
+//
+//   MessageNotification: sended by contacts when they send a MSG to the room Owner.
+//                        if the contactId is in openedChats, nothing happen. ELSE
+//                        sends a notification to the roomOwner.
+//
+//  chatToggle: sended by roomOwner when they open a chat.
 
 export default class Server implements Party.Server {
-  private openedChats: string[] = [];
+  private openedChats: Set<string> = new Set(); // Evita duplicados
 
   constructor(readonly room: Party.Room) {}
 
-  onMessage(message: string, sender: Party.Connection) {
-    //this is the room owner connection. its the only receptor of data
+  onMessage(message: string) {
     const roomOwnerConnection = this.room.getConnection(this.room.id);
 
-    const parsedMsg: MessageNotification | chatToggleNotification = JSON.parse(message);
+    let parsedMsg: NotificationMessage;
 
-    if (parsedMsg.type === "chatMessage") {
-      const isChatOppened = this.openedChats.includes(sender.id);
+    try {
+      parsedMsg = JSON.parse(message);
+    } catch {
+      return;
+    }
 
-      if (isChatOppened) {
-      } else {
-        //closed chat; send notification to user of incoming msg
-        roomOwnerConnection?.send(message);
-      }
-    } else if (parsedMsg.type === "chatToggle") {
-      if (parsedMsg.opened === true) {
-        this.openedChats.push(parsedMsg.contactId);
-      } else {
-        this.openedChats = this.openedChats.filter((senderId) => senderId !== parsedMsg.contactId);
-      }
+    switch (parsedMsg.type) {
+      case "chatMessage":
+        console.log(this.openedChats, parsedMsg.contactId);
+
+        const isChatOppened = this.openedChats.has(parsedMsg.contactId);
+
+        console.log(isChatOppened);
+
+        if (isChatOppened === false) {
+          //Send notification to RoomOwner
+          roomOwnerConnection?.send(message);
+        }
+        break;
+
+      case "chatToggle":
+        console.log(this.openedChats);
+
+        if (parsedMsg.opened) {
+          this.openedChats.add(parsedMsg.contactId);
+        } else {
+          this.openedChats.delete(parsedMsg.contactId);
+        }
+        console.log(this.openedChats);
+
+        break;
+      default:
+        break;
     }
   }
 
   async onClose(connection: Party.Connection): Promise<void> {
+    //If the room owner disconnect, change the user_status to offline.
     if (connection.id === this.room?.id) {
-      const request = await supabase
+      this.openedChats.clear();
+      const {error} = await supabase
         .from("user_status")
         .update({status: "offline"})
         .eq("user_id", connection.id);
 
-      console.log(request.error);
-      console.log(request.data);
-      console.log(request.status, request.statusText, request.count);
+      if (error) {
+        console.error("Error updating status:", error); // Evita romper el Worker
+      }
     }
   }
 }

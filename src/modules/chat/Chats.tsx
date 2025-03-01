@@ -1,5 +1,5 @@
 import {ChatInstance} from "@/types/types";
-import Chat from "./chat";
+import Chat from "./Chat";
 
 function Chats({chatInstances}: {chatInstances: ChatInstance[]}) {
   return (

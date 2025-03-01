@@ -1,10 +1,6 @@
 REFACTORS:
 
-FEATURES:   
--
--Que uno pueda alterar sus propios status
--Que pueda trackear si un contacto esta o no esta conectado. /también otros status
-  -auth check en cada conección a partykit
+FEATURES: -auth check en cada conección a partykit
 
 Posibles bugs:
   -Cuando se abre un chat, mensagger envia una señal para que se sepa que este chat esta abierto. si <Chat> se cierra

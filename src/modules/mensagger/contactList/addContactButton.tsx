@@ -1,9 +1,8 @@
 import {useContacts} from "@/lib/hooks/contactsContext";
 import {addContact} from "@/lib/supabase/models";
-import {UUID} from "crypto";
 import {useState} from "react";
 
-function AddContactButton({userId}: {userId: UUID | string}) {
+function AddContactButton({userId}: {userId: string}) {
   const [email, setEmail] = useState("");
   const {setContacts} = useContacts();
 

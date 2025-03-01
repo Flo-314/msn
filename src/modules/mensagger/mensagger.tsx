@@ -8,7 +8,6 @@ import ContactList from "./contactList/contactList";
 import Ad from "./Ad";
 import Inbox from "./Inbox";
 import {ChatInstance, Message, User, UserStatus} from "@/types/types";
-import {UUID} from "crypto";
 import {useChatInstances} from "@/lib/hooks/chatsContext";
 import {supabase} from "@/lib/utils/supabase/client";
 import {RealtimeChannel} from "@supabase/supabase-js";
@@ -87,7 +86,7 @@ function Mensagger({user}: {user: User}) {
     },
   });
 
-  const handleOpenChat = (contactId: UUID | string) => {
+  const handleOpenChat = (contactId: string) => {
     const chatInstance: ChatInstance = {userId: user.id, contactId};
     const isChatOpen = chatInstances.some((cInstance) => {
       return cInstance.userId === chatInstance.userId && cInstance.contactId === contactId;
@@ -110,6 +109,14 @@ function Mensagger({user}: {user: User}) {
           (cInstance) =>
             cInstance.userId !== chatInstance.userId || cInstance.contactId !== contactId,
         ),
+      );
+
+      contactNotificationSocket.send(
+        JSON.stringify({
+          type: "chatToggle",
+          opened: false,
+          contactId: contactId,
+        }),
       );
     }
   };

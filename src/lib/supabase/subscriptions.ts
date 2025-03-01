@@ -1,10 +1,9 @@
 "use client";
 
-import {UUID} from "crypto";
 import {getContacts} from "./models";
 import {supabase} from "../utils/supabase/client";
 
-export async function subsTest(id: string | UUID) {
+export async function subsTest(id: string) {
   const contacts = await getContacts(id);
 
   if (contacts) {

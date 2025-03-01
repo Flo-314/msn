@@ -1,27 +1,19 @@
-import {UUID} from "crypto";
-
 export type User = {
-  id: UUID | string;
+  id: string;
   email: string;
   state?: UserStatus;
 };
 
-export type Message = {
-  message: string;
-  senderId: UUID | string;
-  type?: "chatMessage";
-};
-
 export type Contact = {
-  contactId: UUID | string;
+  contactId: string;
   email: string;
   username: string;
   status?: UserStatus;
 };
 
 export type ChatInstance = {
-  userId: string | UUID;
-  contactId: string | UUID;
+  userId: string;
+  contactId: string;
 };
 
 export enum UserStatus {
@@ -30,3 +22,17 @@ export enum UserStatus {
   Away = "away",
   Busy = "busy",
 }
+
+export type Message = {
+  type: "chatMessage";
+  contactId: string;
+  message: string;
+};
+
+export type ChatToggle = {
+  type: "chatToggle";
+  contactId: string;
+  opened: boolean;
+};
+
+export type NotificationMessage = Message | ChatToggle;

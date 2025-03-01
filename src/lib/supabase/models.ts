@@ -1,8 +1,7 @@
-import {UUID} from "crypto";
 import {Contact, UserStatus} from "@/types/types";
 import {supabase} from "../utils/supabase/client";
 
-export async function getProfileById(id: UUID | string) {
+export async function getProfileById(id: string) {
   const {data, error} = await supabase.from("profiles").select("*").eq("id", id).single();
 
   if (error) throw new Error(error.message);
@@ -10,10 +9,7 @@ export async function getProfileById(id: UUID | string) {
   return data;
 }
 
-export async function addContact(
-  userId: UUID | string,
-  contactEmail: string,
-): Promise<Contact | null> {
+export async function addContact(userId: string, contactEmail: string): Promise<Contact | null> {
   const {data: contactProfiles, error: contactError} = await supabase
     .from("profiles")
     .select("id, email, username")
@@ -59,22 +55,19 @@ export async function getContacts(userId: string) {
   return contactData;
 }
 
-export async function insertMessage(
-  userId: UUID | string,
-  contactId: UUID | string,
-  message: string,
-) {
+export async function insertMessage(userId: string, contactId: string, message: string) {
   const {data, error} = await supabase
     .from("messages")
     .insert([{user_id: userId, contact_id: contactId, message}]);
 
   if (error) {
+    console.log(error);
   }
 
   return data;
 }
 
-export async function updateUserStatus(userId: string | UUID, newStatus: UserStatus) {
+export async function updateUserStatus(userId: string, newStatus: UserStatus) {
   const isValidStatus = (status: UserStatus) => {
     return Object.values(UserStatus).includes(status);
   };
