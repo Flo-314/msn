@@ -1,5 +1,7 @@
 "use client";
 import Window from "@/lib/common/Window";
+import {useChatInstances} from "@/lib/hooks/chatsContext";
+import {useContacts} from "@/lib/hooks/contactsContext";
 import {insertMessage} from "@/lib/supabase/models";
 import {getChatRoomId, partykitUrl} from "@/lib/utils/partykit/partykitUtils";
 import {Message} from "@/types/types";
@@ -12,8 +14,13 @@ interface ChatProps {
 }
 
 function Chat({userId, contactId}: ChatProps) {
+  const {closeChatInstance} = useChatInstances();
   const [text, setText] = useState("");
   const [mesagges, setMessages] = useState<Message[]>([]);
+  const {getContact} = useContacts();
+
+  const contact = getContact(contactId);
+
   const chatPartySocket = usePartySocket({
     host: partykitUrl,
     party: "chat",
@@ -59,7 +66,10 @@ function Chat({userId, contactId}: ChatProps) {
   };
 
   return (
-    <Window>
+    <Window
+      windowHeaderName={contact.username + " - Conversation"}
+      onClose={() => closeChatInstance(contactId)}
+    >
       <div className="w-[500px] border border-[#2454C5] shadow-lg rounded-t overflow-hidden bg-[#ECE9D8]">
         <div className="flex">
           <div className="flex-1 p-2">

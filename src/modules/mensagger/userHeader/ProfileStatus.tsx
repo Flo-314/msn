@@ -3,6 +3,7 @@ import {updateUserStatus} from "@/lib/supabase/models";
 import {UserStatus} from "@/types/types";
 import Image from "next/image";
 import {useEffect, useState} from "react";
+import PersonalMessage from "./PersonalMessage";
 
 function ProfileStatus() {
   const {user} = useUser();
@@ -17,9 +18,9 @@ function ProfileStatus() {
   }, []);
 
   return (
-    <div className="flex gap-4">
+    <div className="flex gap-4 z-10 relative">
       <div className="w-16 h-16 relative  border border-dark rounded-lg">
-        <Image alt="profile image" src="/dog.webp" fill className="rounded-lg"></Image>
+        <Image alt="profile image" src="/dog.webp" fill className="rounded-lg "></Image>
       </div>
 
       <div className="flex flex-col gap-2">
@@ -45,6 +46,7 @@ function ProfileStatus() {
             <option value={UserStatus.Offline}>Appear Offline</option>
           </select>
         </div>
+        <PersonalMessage></PersonalMessage>
       </div>
     </div>
   );

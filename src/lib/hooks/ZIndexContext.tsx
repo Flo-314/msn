@@ -24,7 +24,7 @@ interface ZIndexProviderProps {
 const ZIndexContext = createContext<ZIndexContextType | undefined>(undefined);
 
 export const ZIndexProvider: React.FC<ZIndexProviderProps> = ({children}) => {
-  const [zIndex, setZIndex] = useState(1);
+  const [zIndex, setZIndex] = useState(20);
 
   const incrementZIndex = () => {
     setZIndex((prevZIndex) => prevZIndex + 1);

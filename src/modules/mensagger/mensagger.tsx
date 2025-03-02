@@ -131,16 +131,22 @@ function Mensagger({user}: {user: User}) {
   }, [user.id]);
 
   return (
-    <Window>
+    <Window childrenName="MSN Messenger">
       <div
         style={{
           background: "linear-gradient(to top, #EFF5FF 0%, #EFF5FF 80%, #ACC4EA 100%)",
         }}
       >
-        <UserHeader></UserHeader>
-        <Inbox></Inbox>
-
-        <div className="grid grid-cols-[15%_85%]">
+        <div className="relative border-1 border-black rounded-lg mb-1 ">
+          <UserHeader></UserHeader>
+          <div
+            className="p-2 rounded-t-xl h-8 absolute w-full -mt-8 "
+            style={{
+              background: "linear-gradient(to top, #DFE8F6 0%,  #ACC4EA 100%)",
+            }}
+          />
+        </div>
+        <div className="grid grid-cols-[15%_85%] mx-1 border-t-1 border-x-1 rounded-lg">
           {/* aside separator */}
           <div className="bg-msnGray pb-20 "></div>
 

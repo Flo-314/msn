@@ -1,12 +1,13 @@
 "use client";
 
 import {ChatInstance} from "@/types/types";
-import React, {createContext, useState, useContext, ReactNode} from "react";
+import React, {createContext, useState, useContext, ReactNode, useEffect} from "react";
 
 const ChatsInstancesContext = createContext<
   | {
       chatInstances: ChatInstance[];
       setChatInstances: React.Dispatch<React.SetStateAction<ChatInstance[]>>;
+      closeChatInstance: (contactId: string) => void;
     }
   | undefined
 >(undefined);
@@ -14,9 +15,21 @@ const ChatsInstancesContext = createContext<
 export const ChatsInstancesProvider = ({children}: {children: ReactNode}) => {
   const [chatsInstances, setChatInstances] = useState<ChatInstance[]>([]);
 
+  const closeChatInstance = (contactId: string): void => {
+    setChatInstances((prev) => prev.filter((chat) => chat.contactId !== contactId));
+  };
+
+  useEffect(() => {
+    console.log(chatsInstances);
+  }, [chatsInstances]);
+
   return (
     <ChatsInstancesContext.Provider
-      value={{chatInstances: chatsInstances, setChatInstances: setChatInstances}}
+      value={{
+        chatInstances: chatsInstances,
+        setChatInstances: setChatInstances,
+        closeChatInstance: closeChatInstance,
+      }}
     >
       {children}
     </ChatsInstancesContext.Provider>

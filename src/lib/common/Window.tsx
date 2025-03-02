@@ -2,8 +2,17 @@
 import React, {useState} from "react";
 import {useZIndex} from "@/lib/hooks/ZIndexContext";
 import WindowButton from "./WindowButton";
+import Image from "next/image";
 
-const Window = ({children, childrenName}: {children?: React.ReactNode; childrenName?: string}) => {
+const Window = ({
+  children,
+  childrenName,
+  onClose,
+}: {
+  children?: React.ReactNode;
+  childrenName?: string;
+  onClose?: () => void;
+}) => {
   const {zIndex, incrementZIndex} = useZIndex();
   const [position, setPosition] = useState({x: 100, y: 100});
   const [localZIndex, setLocalZIndex] = useState(zIndex);
@@ -56,13 +65,15 @@ const Window = ({children, childrenName}: {children?: React.ReactNode; childrenN
           className={`flex items-center px-1 rounded-t-lg justify-between bg-window-header-gradient ${isDragging ? "cursor-grabbing" : "cursor-grab"} h-[29px]`}
         >
           <div className="flex items-center gap-2">
-            <div className="h-4 w-4 " />
+            <div className=" ">
+              <Image height={16} width={16} alt="windowIcon" src="/msnpersonlogo.png"></Image>
+            </div>
             <span className="text-sm text-white">{childrenName}</span>
           </div>
           <div className="flex gap-1 text-white ">
             <WindowButton type="minimize"></WindowButton>
             <WindowButton type="maximize"></WindowButton>
-            <WindowButton type="close"></WindowButton>
+            <WindowButton onClick={onClose} type="close"></WindowButton>
           </div>
         </div>
       </div>
