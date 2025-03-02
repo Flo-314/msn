@@ -18,8 +18,6 @@ function ContactCard({contactId, username, handleOpenChat, status}: ContactCardP
         >
           {username}
         </span>
-
-        <span className="text-gray-500 ml-1">{username}</span>
       </div>
     </div>
   );

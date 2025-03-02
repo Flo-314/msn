@@ -6,9 +6,11 @@ function Ad() {
       <div className="max-w-60 max-h-16 relative w-full h-full">
         <Image
           className="border border-msnDarkGray"
-          src="/msnPropaganda.PNG"
+          src="/png/mensaggerWindow/msnPropaganda.PNG"
           fill
           alt="msn propaganda"
+          priority={false}
+          sizes=""
         ></Image>
       </div>
     </div>

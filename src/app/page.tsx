@@ -9,7 +9,7 @@ import "./crtEffect.css";
 export default function Home() {
   return (
     <div
-      className="min-h-screen w-full  "
+      className="min-h-screen w-full crt  "
       style={{backgroundImage: "url(https://i.imgur.com/Zk6TR5k.jpeg)"}}
     >
       <ZIndexProvider>

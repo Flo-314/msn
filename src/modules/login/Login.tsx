@@ -12,8 +12,14 @@ export default function Login() {
         <div className="mx-auto max-w-md p-2  rounded-sm bg-backforth-gradient ">
           <LoginTop></LoginTop>
           <div className="flex flex-col justify-center items-center">
-            <div className="border-[1px] border-gray-500 rounded-lg bg-[#FEFEFE]">
-              <Image alt="msnLogin" src={"/msnpersonlogo.png"} width={"120"} height={"120"}></Image>
+            <div className="    ">
+              <Image
+                className="rounded-xl border-msnDarkGray border "
+                alt="msnLogin"
+                src={"/png/msnPersonLogo.png"}
+                width={"120"}
+                height={"120"}
+              ></Image>
             </div>
 
             <LoginForm></LoginForm>
@@ -29,7 +35,7 @@ export default function Login() {
 function LoginTop() {
   return (
     <div className="flex gap-3 items-center mb-7">
-      <Image src={"/MSN_logo.webp"} width={35} height={12} alt="msn logo"></Image>
+      <Image src={"/png/login/msnLogo.png"} width={35} height={12} alt="msn logo"></Image>
       <p className="bold text-[10px]">Messenger</p>
     </div>
   );
@@ -123,7 +129,7 @@ function LoginForm() {
 
       {isLogging ? (
         <div className="max-w-16 my-3.5 mx-auto">
-          <Image height={100} width={100} src="/login.gif" alt="login loadin" />
+          <Image height={96} width={72} src="/gif/login/login.GIF" alt="login loadin" />
         </div>
       ) : (
         <div className=" text-sm my-3.5">

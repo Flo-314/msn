@@ -6,7 +6,6 @@ import UserHeader from "./userHeader/UserHeader";
 import AddContactButton from "./contactList/addContactButton";
 import ContactList from "./contactList/contactList";
 import Ad from "./Ad";
-import Inbox from "./Inbox";
 import {ChatInstance, Message, User, UserStatus} from "@/types/types";
 import {useChatInstances} from "@/lib/hooks/chatsContext";
 import {supabase} from "@/lib/utils/supabase/client";
@@ -139,7 +138,13 @@ function Mensagger({user}: {user: User}) {
         <div className="grid grid-cols-[7%_93%]   ">
           {/* aside separator */}
           <div className="bg-[#ecf0f5]">
-            <Image src="/contactAsideShape.png" width={35} height={61} alt="" className=""></Image>
+            <Image
+              src="/png/mensaggerWindow/contactAsideShape.png"
+              width={35}
+              height={61}
+              alt=""
+              className=""
+            ></Image>
           </div>
 
           <div className=" border-black  bg-msnLightGray">

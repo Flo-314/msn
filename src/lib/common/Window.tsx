@@ -66,7 +66,7 @@ const Window = ({
         >
           <div className="flex items-center gap-2">
             <div className=" ">
-              <Image height={16} width={16} alt="windowIcon" src="/msnpersonlogo.png"></Image>
+              <Image height={16} width={16} alt="windowIcon" src="/icons/windowsIcon.png"></Image>
             </div>
             <span className="text-sm text-white">{windowHeaderName}</span>
           </div>

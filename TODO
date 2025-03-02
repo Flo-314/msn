@@ -2,6 +2,6 @@ REFACTORS:
 
 FEATURES: -auth check en cada conección a partykit
 
-Posibles bugs:
+Posibles bugs: -USUARIOS PUEden agregarse a si mismo
   -Cuando se abre un chat, mensagger envia una señal para que se sepa que este chat esta abierto. si <Chat> se cierra
   inesperadamente no tiene forma de mandar una señal para que sepa qeu se cerro el chat.

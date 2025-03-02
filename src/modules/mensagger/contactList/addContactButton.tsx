@@ -16,7 +16,12 @@ function AddContactButton({userId}: {userId: string}) {
         background: "linear-gradient(to top, #E6EBF4 0%, #E6EBF4 30%,  #ACC4EA 100%)",
       }}
     >
-      <Image width={18} height={18} alt="addFriendIcon" src="/addContactIcon.png"></Image>
+      <Image
+        width={18}
+        height={18}
+        alt="addFriendIcon"
+        src="/icons/contact/addContactIcon.png"
+      ></Image>
       <p
         onClick={() => {
           setIsAddingContact(true);
@@ -30,7 +35,8 @@ function AddContactButton({userId}: {userId: string}) {
             setIsAddingContact(false);
           }}
         >
-          <p
+          <button
+            className="text-red-700 text-xl mx-2 border-2 "
             onClick={async () => {
               const contact = await addContact(userId, email);
 
@@ -40,8 +46,13 @@ function AddContactButton({userId}: {userId: string}) {
             }}
           >
             Add a contact
-          </p>
-          <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
+          </button>
+          <input
+            type="text"
+            placeholder="introduce contact email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </Window>
       )}
     </div>

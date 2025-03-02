@@ -3,10 +3,16 @@ import Image from "next/image";
 function Inbox() {
   return (
     <div className="flex z-10 gap-5 mt-2 ">
-      <Image src={"/inboxMail.png"} width={15} height={15} className="" alt="lettericon"></Image>
+      <Image
+        src={"/icons/userHeader/mailIcon.png"}
+        width={15}
+        height={15}
+        className=""
+        alt="lettericon"
+      ></Image>
       <div className="flex gap-1">
         <Image
-          src={"/msnTodayIcon.png"}
+          src={"/icons/userHeader/msnTodayIcon.png"}
           width={15}
           height={15}
           className=""

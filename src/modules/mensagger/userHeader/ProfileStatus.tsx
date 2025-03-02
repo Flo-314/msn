@@ -4,7 +4,7 @@ import {UserStatus} from "@/types/types";
 import Image from "next/image";
 import {useEffect, useState} from "react";
 import PersonalMessage from "./PersonalMessage";
-import Inbox from "../Inbox";
+import Inbox from "./Inbox";
 
 function ProfileStatus() {
   const {user} = useUser();
@@ -26,7 +26,7 @@ function ProfileStatus() {
       </div>
 
       <div className="flex flex-col gap-1 mt-1 ">
-        <div className="flex text-xs">
+        <div className="flex text-xs gap-3">
           <p className="font-bold">{user?.username}</p>
 
           <select

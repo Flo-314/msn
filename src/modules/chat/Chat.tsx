@@ -115,7 +115,7 @@ function Chat({userId, contactId}: ChatProps) {
           <div className="flex  flex-col gap-36 p-2">
             <div className="border-2 border-msnDarkGray">
               <Image
-                src="/msnpersonlogo.png"
+                src="/png/msnPersonLogo.png"
                 alt="Avatar"
                 width={80}
                 height={80}
