@@ -38,7 +38,7 @@ export default {
         "blue-dark": "#16243B",
         "gray-dark": "#455775",
         /* */
-
+        blueText: "#00008C",
         gray: "#DFE8F6",
         "gray-light": "#F3EFFF",
         winBlue: "#0831d9",

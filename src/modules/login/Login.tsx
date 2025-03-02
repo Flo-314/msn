@@ -8,7 +8,7 @@ import {signIn, signup} from "@/lib/supabase/auth";
 export default function Login() {
   return (
     <div>
-      <Window childrenName="MSN">
+      <Window windowHeaderName="MSN">
         <div className="mx-auto max-w-md p-2  rounded-sm bg-backforth-gradient ">
           <LoginTop></LoginTop>
           <div className="flex flex-col justify-center items-center">

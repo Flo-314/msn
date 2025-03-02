@@ -13,6 +13,7 @@ import {supabase} from "@/lib/utils/supabase/client";
 import {RealtimeChannel} from "@supabase/supabase-js";
 import {partykitUrl} from "@/lib/utils/partykit/partykitUtils";
 import {useContacts} from "@/lib/hooks/contactsContext";
+import Image from "next/image";
 
 function Mensagger({user}: {user: User}) {
   const {contacts, setContacts} = useContacts();
@@ -131,28 +132,19 @@ function Mensagger({user}: {user: User}) {
   }, [user.id]);
 
   return (
-    <Window childrenName="MSN Messenger">
-      <div
-        style={{
-          background: "linear-gradient(to top, #EFF5FF 0%, #EFF5FF 80%, #ACC4EA 100%)",
-        }}
-      >
-        <div className="relative border-1 border-black rounded-lg mb-1 ">
-          <UserHeader></UserHeader>
-          <div
-            className="p-2 rounded-t-xl h-8 absolute w-full -mt-8 "
-            style={{
-              background: "linear-gradient(to top, #DFE8F6 0%,  #ACC4EA 100%)",
-            }}
-          />
-        </div>
-        <div className="grid grid-cols-[15%_85%] mx-1 border-t-1 border-x-1 rounded-lg">
-          {/* aside separator */}
-          <div className="bg-msnGray pb-20 "></div>
+    <Window windowHeaderName="MSN Messenger">
+      <div className="bg-gray-light min-w-64 w-[500px] ">
+        <UserHeader></UserHeader>
 
-          <div className="py-1 border-black border-l border-b  my-1 bg-msnLightGray">
+        <div className="grid grid-cols-[7%_93%]   ">
+          {/* aside separator */}
+          <div className="bg-[#ecf0f5]">
+            <Image src="/contactAsideShape.png" width={35} height={61} alt="" className=""></Image>
+          </div>
+
+          <div className=" border-black  bg-msnLightGray">
             <AddContactButton userId={user.id}></AddContactButton>
-            <div className="ml-1">
+            <div className="">
               <ContactList contacts={contacts} handleOpenChat={handleOpenChat}></ContactList>
               <Ad></Ad>
             </div>

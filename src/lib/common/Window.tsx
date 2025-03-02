@@ -6,11 +6,11 @@ import Image from "next/image";
 
 const Window = ({
   children,
-  childrenName,
+  windowHeaderName,
   onClose,
 }: {
   children?: React.ReactNode;
-  childrenName?: string;
+  windowHeaderName?: string;
   onClose?: () => void;
 }) => {
   const {zIndex, incrementZIndex} = useZIndex();
@@ -68,7 +68,7 @@ const Window = ({
             <div className=" ">
               <Image height={16} width={16} alt="windowIcon" src="/msnpersonlogo.png"></Image>
             </div>
-            <span className="text-sm text-white">{childrenName}</span>
+            <span className="text-sm text-white">{windowHeaderName}</span>
           </div>
           <div className="flex gap-1 text-white ">
             <WindowButton type="minimize"></WindowButton>

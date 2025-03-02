@@ -5,10 +5,10 @@ function PersonalMessage() {
         readOnly={true}
         type="text"
         placeholder="<Type a personal message>"
-        value="  Type a personal message  "
-        className="text-msngray text-xs bg-transparent w-44 "
+        value="asd"
+        className="text-msngray text-xs bg-transparent w-8 "
       />
-      <button className="text-xs">▼</button>
+      <button className="text-[6px]">▼</button>
     </div>
   );
 }

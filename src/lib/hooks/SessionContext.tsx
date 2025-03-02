@@ -5,6 +5,7 @@ import React, {createContext, useState, useContext, ReactNode, useEffect} from "
 import {Session} from "@supabase/supabase-js";
 import {supabase} from "../utils/supabase/client";
 import {useUser} from "./userContext";
+import {getProfileById} from "../supabase/models";
 
 const SessionContext = createContext<{
   session: Session | null;
@@ -24,7 +25,9 @@ export const SessionProvider = ({children}: {children: ReactNode}) => {
        */ const user = session?.user;
 
       if (user?.id && user?.email) {
-        setUser({id: user.id, email: user.email});
+        getProfileById(user.id).then((profile) => {
+          setUser({id: user.id, email: user.email, username: profile.username});
+        });
       }
     });
 

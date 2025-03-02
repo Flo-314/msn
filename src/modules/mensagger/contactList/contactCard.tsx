@@ -5,20 +5,20 @@ type ContactCardProps = Contact & {
   handleOpenChat: (contactId: string) => void;
 };
 
-function ContactCard({contactId, email, username, handleOpenChat, status}: ContactCardProps) {
+function ContactCard({contactId, username, handleOpenChat, status}: ContactCardProps) {
   return (
-    <div className="flex items-center gap-2 p-1  rounded">
+    <div className="flex items-center gap-2  rounded ml-4">
       <StatusIcon userStatus={status}></StatusIcon>
-      <div className="text-sm">
-        <span className="text-gray-800">{email}</span>
+      <div className="text-xs">
         <span
           onClick={() => {
             handleOpenChat(contactId);
           }}
-          className="text-gray-500 ml-1"
+          className="text-gray-800"
         >
-          {contactId}
+          {username}
         </span>
+
         <span className="text-gray-500 ml-1">{username}</span>
       </div>
     </div>

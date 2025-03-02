@@ -2,6 +2,7 @@ export type User = {
   id: string;
   email: string;
   state?: UserStatus;
+  username: string;
 };
 
 export type Contact = {

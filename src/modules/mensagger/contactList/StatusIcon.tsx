@@ -1,22 +1,17 @@
 import {UserStatus} from "@/types/types";
+import Image from "next/image";
+
+const statusIcons: Record<UserStatus, string> = {
+  [UserStatus.Online]: "/icons/contact/connectedContactIcon.png",
+  [UserStatus.Away]: "/icons/contact/awayContactIcon.png",
+  [UserStatus.Offline]: "/icons/contact/offlineContactIcon.png",
+  [UserStatus.Busy]: "/icons/contact/busyContactIcon.png",
+};
 
 export function StatusIcon({userStatus}: {userStatus: UserStatus | undefined}) {
-  switch (userStatus) {
-    case UserStatus.Online:
-      return <div>online</div>;
+  if (!userStatus) return null; // Si no hay un userStatus, retorna null.
 
-    case UserStatus.Away:
-      // Devuelve un ícono o cualquier contenido para "away"
-      return <div>Away</div>; // O reemplázalo por un ícono correspondiente.
+  const iconSrc = statusIcons[userStatus];
 
-    case UserStatus.Offline:
-      return <div>offline</div>;
-
-    case UserStatus.Busy:
-      // Puedes agregar un ícono o un estado para "busy" si es necesario.
-      return <div>Busy</div>;
-
-    default:
-      return null; // Devuelve null o algo en caso de un valor desconocido.
-  }
+  return iconSrc ? <Image height={14} width={14} alt="contact icon" src={iconSrc} /> : null;
 }

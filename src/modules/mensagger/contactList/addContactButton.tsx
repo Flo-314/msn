@@ -1,32 +1,49 @@
+import Window from "@/lib/common/Window";
 import {useContacts} from "@/lib/hooks/contactsContext";
 import {addContact} from "@/lib/supabase/models";
+import Image from "next/image";
 import {useState} from "react";
 
 function AddContactButton({userId}: {userId: string}) {
-  const [email, setEmail] = useState("");
+  const [isAddingContact, setIsAddingContact] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>("");
   const {setContacts} = useContacts();
 
   return (
     <div
-      className="text-sm text-darkLabel pt-5 border-b border-msnLightGray"
+      className="text-xs gap-1 items center flex text-darkLabel  border-b border-msnDarkGray bg-normal-gradient "
       style={{
-        background: "linear-gradient(to top, #EFF5FF 0%, #EFF5FF 15%, #ACC4EA 100%)",
+        background: "linear-gradient(to top, #E6EBF4 0%, #E6EBF4 30%,  #ACC4EA 100%)",
       }}
     >
+      <Image width={18} height={18} alt="addFriendIcon" src="/addContactIcon.png"></Image>
       <p
-        onClick={async () => {
-          const contact = await addContact(userId, email);
-
-          if (contact) {
-            setContacts((prev) => [...prev, contact]);
-          }
+        onClick={() => {
+          setIsAddingContact(true);
         }}
       >
-        Add a contact
+        Add a Contact
       </p>
-      <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
-      {/* imagen */}
-      <div></div>
+      {isAddingContact && (
+        <Window
+          onClose={() => {
+            setIsAddingContact(false);
+          }}
+        >
+          <p
+            onClick={async () => {
+              const contact = await addContact(userId, email);
+
+              if (contact) {
+                setContacts((prev) => [...prev, contact]);
+              }
+            }}
+          >
+            Add a contact
+          </p>
+          <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
+        </Window>
+      )}
     </div>
   );
 }

@@ -89,7 +89,7 @@ export type Database = {
           id: string;
           last_name: string | null;
           updated_at: string | null;
-          username: string | null;
+          username: string;
         };
         Insert: {
           avatar?: string | null;

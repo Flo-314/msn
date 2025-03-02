@@ -4,11 +4,13 @@ import {UserStatus} from "@/types/types";
 import Image from "next/image";
 import {useEffect, useState} from "react";
 import PersonalMessage from "./PersonalMessage";
+import Inbox from "../Inbox";
 
 function ProfileStatus() {
   const {user} = useUser();
   const [status, setStatus] = useState<UserStatus>(UserStatus.Online);
 
+  console.log(user);
   useEffect(() => {
     const savedStatus = localStorage.getItem("status") as UserStatus;
 
@@ -18,14 +20,14 @@ function ProfileStatus() {
   }, []);
 
   return (
-    <div className="flex gap-4 z-10 relative">
-      <div className="w-16 h-16 relative  border border-dark rounded-lg">
-        <Image alt="profile image" src="/dog.webp" fill className="rounded-lg "></Image>
+    <div className="flex gap-4 z-10 relative px-2.5 pt-2.5">
+      <div className="w-14 h-14 relative  border border-blue-dark rounded-xl mb-4">
+        <Image alt="profile image" src="/dog.webp" fill className="rounded-xl "></Image>
       </div>
 
-      <div className="flex flex-col gap-2">
-        <div className="flex">
-          <p className="font-bold">{user?.email}</p>
+      <div className="flex flex-col gap-1 mt-1 ">
+        <div className="flex text-xs">
+          <p className="font-bold">{user?.username}</p>
 
           <select
             value={status}
@@ -38,7 +40,7 @@ function ProfileStatus() {
               }
             }}
             id="status"
-            className=" bg-transparent text-msnGray text-xs"
+            className=" bg-transparent text-msnGray text-xs  font-extralight"
           >
             <option value={UserStatus.Online}>Online</option>
             <option value={UserStatus.Busy}>Busy</option>
@@ -47,6 +49,8 @@ function ProfileStatus() {
           </select>
         </div>
         <PersonalMessage></PersonalMessage>
+
+        <Inbox></Inbox>
       </div>
     </div>
   );
