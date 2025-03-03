@@ -168,7 +168,7 @@ https://aleclownes.com/2017/02/01/crt-display.html
     opacity: 0;
     z-index: 99999999;
     pointer-events: none;
-    animation: flicker 0.35s infinite;
+    animation: flicker 1s infinite;
 
   }
   

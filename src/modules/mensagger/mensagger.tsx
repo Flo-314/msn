@@ -78,7 +78,7 @@ function Mensagger({user}: {user: User}) {
 
     onMessage(messageEvent) {
       const message: Message = JSON.parse(messageEvent.data);
-      const notificationSound = new Audio("/incomingMessage.mp3");
+      const notificationSound = new Audio("/sounds/incomingMessage.mp3");
 
       if (message.type === message.type) {
         notificationSound.play();
