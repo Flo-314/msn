@@ -26,7 +26,7 @@ export const SessionProvider = ({children}: {children: ReactNode}) => {
 
       if (user?.id && user?.email) {
         getProfileById(user.id).then((profile) => {
-          setUser({id: user.id, email: user.email, username: profile.username});
+          setUser({id: user.id, email: user.email ?? "", username: profile.username});
         });
       }
     });

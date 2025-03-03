@@ -19,12 +19,12 @@ function ChatHeaderToolbar(props: ChatHeaderToolbarProps) {
           backgroundSize: "contain",
         }}
       >
-        <ImageButton image="invite" text="Invite" bind="I" />
-        <ImageButton image="send" text="Send Files" bind="l" />
-        <ImageButton image="video" text="Video" bind="o" />
-        <ImageButton image="voice" text="Voice" bind="c" />
-        <ImageButton image="activities" text="Activities" bind="v" />
-        <ImageButton image="games" text="Games" bind="G" />
+        <ImageButton image="invite" text="Invite" />
+        <ImageButton image="send" text="Send Files" />
+        <ImageButton image="video" text="Video" />
+        <ImageButton image="voice" text="Voice" />
+        <ImageButton image="activities" text="Activities" />
+        <ImageButton image="games" text="Games" />
       </div>
 
       <div className="grid grid-cols-[50px_50px_37px_28px] h-full">
