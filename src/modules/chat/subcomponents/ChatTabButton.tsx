@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 interface TabButtonProps {
   image: string;
   focus?: boolean;
@@ -13,7 +15,7 @@ function TabButton(props: TabButtonProps) {
           flex justify-center ${focus ? "bg-white border-b-[3px] border-b-[#E2C47B] -translate-y-[1px]" : "bg-[#EDF2F8]"}
         `}
     >
-      <img src={`tabs/${image}.png`} alt={image} className="w-[16px] h-[16px]" />
+      <Image width={16} height={16} src={`/tabs/${image}.png`} alt={image} />
     </div>
   );
 }

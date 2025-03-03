@@ -1,14 +1,11 @@
 import type React from "react";
 import SimpleButton from "./ChatSimpleButton";
 import TabButton from "./ChatTabButton";
+import {useChat} from "@/lib/hooks/ChatContext";
 
-interface ChatInputProps {
-  text: string;
-  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  onSend: () => void;
-}
+function ChatInput() {
+  const {text, handleChange, handleSend} = useChat();
 
-function ChatInput({text, onChange, onSend}: ChatInputProps) {
   return (
     <div className="grid grid-rows-[24px_1fr_24px] min-h-[122px] bg-white w-[97%] border border-[#586170] rounded-[6px]">
       <div className="bg-gradient-to-b from-[#D8E8F7] via-[#F5F2F9] to-[#D8E8F7] border-b border-b-[#586170] rounded-t-[6px] flex">
@@ -22,19 +19,25 @@ function ChatInput({text, onChange, onSend}: ChatInputProps) {
 
       <div className="flex justify-end m-[3px]">
         <textarea
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              handleSend();
+            }
+          }}
           value={text}
-          onChange={onChange}
+          onChange={handleChange}
           className="flex-grow mr-2 p-2 border border-[#93989C] rounded-[5px]"
         />
         <div className="flex flex-col gap-[3px]">
           <button
-            onClick={onSend}
+            onClick={handleSend}
             className="border border-[#93989C] bg-[#FBFBFB] shadow-[inset_-4px_-4px_4px_#C0C9E0] w-[58px] h-[37px] rounded-[5px] font-[Tahoma] font-bold text-[11px] text-[#969C9A]"
           >
-            <span className="underline">S</span>end
+            Send
           </button>
           <button className="border border-[#93989C] bg-[#FBFBFB] shadow-[inset_-4px_-4px_4px_#C0C9E0] w-[58px] h-[25px] rounded-[5px] font-[Tahoma] font-bold text-[11px] text-[#969C9A]">
-            Sea<span className="underline">r</span>ch
+            Search
           </button>
         </div>
       </div>

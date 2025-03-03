@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 interface SimpleButtonProps {
   image: string;
   label?: string;
@@ -9,7 +11,8 @@ function SimpleButton(props: SimpleButtonProps) {
 
   return (
     <div className="flex items-center px-[6px] h-full">
-      <img src={`simple/${image}.png`} alt={image} className="h-[16px]" />
+      <Image src={`/simple/${image}.png`} alt={image} height={16} width={16} />
+
       {label && (
         <span className="font-[Verdana] text-[10px] text-[#444] inline-block w-[50px] pl-[3px]">
           {label}

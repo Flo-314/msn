@@ -10,7 +10,6 @@ function ProfileStatus() {
   const {user} = useUser();
   const [status, setStatus] = useState<UserStatus>(UserStatus.Online);
 
-  console.log(user);
   useEffect(() => {
     const savedStatus = localStorage.getItem("status") as UserStatus;
 

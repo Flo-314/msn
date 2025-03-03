@@ -17,6 +17,10 @@ const Window = ({
   const [position, setPosition] = useState({x: 100, y: 100});
   const [localZIndex, setLocalZIndex] = useState(zIndex);
   const [isDragging, setIsDragging] = useState(false);
+  const handleWindowClick = () => {
+    setLocalZIndex(zIndex + 1); // Increment zIndex for the current window
+    incrementZIndex(); // Update global zIndex
+  };
 
   const updatePosition = (moveEvent: MouseEvent, offsetX: number, offsetY: number) => {
     setPosition({
@@ -44,11 +48,6 @@ const Window = ({
     });
   };
 
-  const handleWindowClick = () => {
-    setLocalZIndex(zIndex + 1); // Increment zIndex for the current window
-    incrementZIndex(); // Update global zIndex
-  };
-
   return (
     <div
       className="absolute   rounded-t-xl  "
@@ -61,6 +60,9 @@ const Window = ({
     >
       <div className="">
         <div
+          onMouseDownCapture={() => {
+            handleWindowClick();
+          }}
           onMouseDown={handleMouseDown}
           className={`flex items-center px-1 rounded-t-lg justify-between bg-window-header-gradient ${isDragging ? "cursor-grabbing" : "cursor-grab"} h-[29px]`}
         >

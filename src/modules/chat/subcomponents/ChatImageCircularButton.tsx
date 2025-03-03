@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 interface ImageCircularButtonProps {
   image: string;
   className?: string;
@@ -14,14 +16,7 @@ function ImageCircularButton(props: ImageCircularButtonProps) {
         height: "var(--size, 24px)",
       }}
     >
-      <img
-        src={`toolbar/${image}.png`}
-        alt={image}
-        style={{
-          width: "var(--image-size, 16px)",
-          height: "var(--image-size, 16px)",
-        }}
-      />
+      <Image width={16} height={16} src={`/toolbar/${image}.png`} alt={image} />
     </div>
   );
 }
