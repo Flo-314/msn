@@ -1,7 +1,7 @@
 import type React from "react";
 import SimpleButton from "./ChatSimpleButton";
 import TabButton from "./ChatTabButton";
-import {useChat} from "@/lib/hooks/ChatContext";
+import {useChat} from "@/lib/hooks/chatContext";
 
 function ChatInput() {
   const {text, handleChange, handleSend} = useChat();

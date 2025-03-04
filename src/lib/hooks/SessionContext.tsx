@@ -15,18 +15,17 @@ const SessionContext = createContext<{
 
 export const SessionProvider = ({children}: {children: ReactNode}) => {
   const [session, setSession] = useState<Session | null>(null);
-  /*   const [_, setIsLoading] = useState(true);
-   */ const {setUser} = useUser();
+  const {user, setUser} = useUser();
 
   useEffect(() => {
-    const authStateListener = supabase.auth.onAuthStateChange(async (_, session) => {
-      setSession(session);
-      /*       setIsLoading(false);
-       */ const user = session?.user;
+    const authStateListener = supabase.auth.onAuthStateChange(async (_, newSession) => {
+      if (session || user) return;
+      setSession(newSession);
+      const sessionUser = newSession?.user;
 
-      if (user?.id && user?.email) {
-        getProfileById(user.id).then((profile) => {
-          setUser({id: user.id, email: user.email ?? "", username: profile.username});
+      if (sessionUser?.id && sessionUser?.email && !user) {
+        getProfileById(sessionUser.id).then((profile) => {
+          setUser({id: sessionUser.id, email: sessionUser.email ?? "", username: profile.username});
         });
       }
     });
@@ -34,7 +33,7 @@ export const SessionProvider = ({children}: {children: ReactNode}) => {
     return () => {
       authStateListener.data.subscription.unsubscribe();
     };
-  }, [setUser]);
+  }, [user, session, setUser]);
 
   return <SessionContext.Provider value={{session}}>{children}</SessionContext.Provider>;
 };

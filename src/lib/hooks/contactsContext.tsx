@@ -1,22 +1,34 @@
 "use client";
 
 import {Contact} from "@/types/types";
-import React, {createContext, useState, useContext, ReactNode} from "react";
+import React, {createContext, useState, useContext, ReactNode, useEffect} from "react";
+import {useUser} from "./userContext";
+import {getContacts} from "../supabase/models";
 
 const ContactsContext = createContext<
   | {
       contacts: Contact[] | [];
       getContact: (contactId: string) => Contact;
-      setContacts: React.Dispatch<React.SetStateAction<Contact[] | []>>;
+      setContacts: React.Dispatch<React.SetStateAction<Contact[]>>;
     }
   | undefined
 >(undefined);
 
 export const ContactsProvider = ({children}: {children: ReactNode}) => {
-  const [contacts, setContacts] = useState<Contact[] | []>([]);
+  const {user} = useUser();
+  const [contacts, setContacts] = useState<Contact[]>([]);
 
   const getContact = (contactId: string) =>
     contacts.filter((contact) => contact.contactId === contactId)[0];
+
+  // Fetch contacts when user is logged in.
+  useEffect(() => {
+    if (user) {
+      getContacts(user.id).then((contacts) => {
+        setContacts(contacts ?? []);
+      });
+    }
+  }, [user]);
 
   return (
     <ContactsContext.Provider value={{contacts, setContacts, getContact}}>

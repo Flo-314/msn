@@ -2,7 +2,7 @@ import {createClient} from "@supabase/supabase-js";
 
 import type * as Party from "partykit/server";
 import {Database} from "../database.types";
-import {NotificationMessage} from "@/types/types";
+import {NotificationMessage, UserStatus} from "@/types/types";
 
 const supabase = createClient<Database>(
   process.env.NEXT_PUBLIC_SUPABASE_URL as string,
@@ -31,9 +31,25 @@ const supabase = createClient<Database>(
 
 export default class Server implements Party.Server {
   private openedChats: Set<string> = new Set(); // Evita duplicados
-
   constructor(readonly room: Party.Room) {}
+  onConnect(connection: Party.Connection, ctx: Party.ConnectionContext): void | Promise<void> {
+    const initialStatus =
+      (new URL(ctx.request.url).searchParams.get("initialStatus") as UserStatus) ?? "online";
 
+    if (connection.id === this.room.id) {
+      // i wrap it in a timeout, just to not mess with the statusChange on disconnect. if the user refresh the browser, the call stack can be buggy.
+      setTimeout(async () => {
+        const {error} = await supabase
+          .from("user_status")
+          .update({status: initialStatus})
+          .eq("user_id", connection.id);
+
+        if (error) {
+          console.error("Error updating status:", error); // Evita romper el Worker
+        }
+      }, 500);
+    }
+  }
   onMessage(message: string) {
     const roomOwnerConnection = this.room.getConnection(this.room.id);
 

@@ -3,7 +3,7 @@
 import ChatHeaderToolbar from "./ChatHeaderToolbar";
 import ChatContact from "./ChatContact";
 import ChatUser from "./ChatUser";
-import {useChat} from "@/lib/hooks/ChatContext";
+import {useChat} from "@/lib/hooks/chatContext";
 import Window from "@/lib/common/Window";
 
 function ChatWindow() {

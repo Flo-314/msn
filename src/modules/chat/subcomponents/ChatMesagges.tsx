@@ -1,4 +1,4 @@
-import {useChat} from "@/lib/hooks/ChatContext";
+import {useChat} from "@/lib/hooks/chatContext";
 import {useUser} from "@/lib/hooks/userContext";
 import {useEffect, useRef} from "react";
 

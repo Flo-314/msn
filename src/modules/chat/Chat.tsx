@@ -1,6 +1,6 @@
 "use client";
 
-import {ChatProvider} from "@/lib/hooks/ChatContext";
+import {ChatProvider} from "@/lib/hooks/chatContext";
 import ChatWindow from "./subcomponents/ChatWindow";
 
 interface ChatWindowProps {
