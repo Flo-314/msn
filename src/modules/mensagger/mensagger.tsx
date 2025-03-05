@@ -29,7 +29,7 @@ function Mensagger({user}: {user: User}) {
         ),
         {
           position: "bottom-right",
-          autoClose: 500000,
+          autoClose: 5000,
           hideProgressBar: true,
           closeOnClick: false,
           pauseOnHover: true,
