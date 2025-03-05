@@ -43,8 +43,11 @@ export const useChatNotification = (user: User) => {
   return {toggleChat};
 };
 
-export const useUserStatusSubscription = (user: User) => {
-  const {contacts, setContacts} = useContacts();
+export const useUserStatusSubscription = (
+  user: User,
+  showContactOnlineToast: (username: string) => void,
+) => {
+  const {contacts, setContacts, getContact} = useContacts();
 
   useEffect(() => {
     if (!user || contacts.length === 0) return;
@@ -58,6 +61,11 @@ export const useUserStatusSubscription = (user: User) => {
       // subscribe to the user_status channel
       statusChannel = createStatusChannel(filter, (payload) => {
         const {status, user_id} = payload.new as {status: UserStatus; user_id: string};
+        const contact = getContact(user_id);
+
+        if (contact.status !== UserStatus.Online && status === UserStatus.Online) {
+          showContactOnlineToast(contact.username);
+        }
 
         // update the updated contact with the new status
         setContacts((prevContacts) => {

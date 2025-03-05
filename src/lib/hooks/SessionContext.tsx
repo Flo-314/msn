@@ -18,7 +18,7 @@ export const SessionProvider = ({children}: {children: ReactNode}) => {
   const {user, setUser} = useUser();
 
   useEffect(() => {
-    const authStateListener = supabase.auth.onAuthStateChange(async (_, newSession) => {
+    const authStateListener = supabase.auth.onAuthStateChange((_, newSession) => {
       if (session || user) return;
       setSession(newSession);
       const sessionUser = newSession?.user;

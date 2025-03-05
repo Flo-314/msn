@@ -156,6 +156,7 @@ function LoginForm() {
               name="auto-login"
               type="checkbox"
               id="auto-login"
+              checked={isAutoLogin}
               onChange={() => {
                 setIsAutoLogin(!isAutoLogin);
               }}

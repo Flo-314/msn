@@ -46,6 +46,12 @@ export default {
         negative: "#FF6B2B",
         positive: "#00CC52",
         "positive-dark": "#239E7E",
+
+        blueToast: {
+          100: "#A6B4CF",
+          200: "#728EB8",
+          300: "#4E6BA0",
+        },
       },
       height: {
         xpButton: "21px",

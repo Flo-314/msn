@@ -5,13 +5,12 @@ import {ContactsProvider} from "@/lib/hooks/contactsContext";
 import {UserProvider} from "@/lib/hooks/userContext";
 import MsnMensaggerApp from "@/modules/msnMensaggerApp";
 import "./crtEffect.css";
+import Image from "next/image";
 
 export default function Home() {
   return (
-    <div
-      className="min-h-screen w-full crt  "
-      style={{backgroundImage: "url(https://i.imgur.com/Zk6TR5k.jpeg)"}}
-    >
+    <div className="crt h-full w-full  overflow-hidden   ">
+      <Image alt="windows xp wallpaper" priority={true} src="/png/xpWallpaper.jpeg" fill></Image>
       <ZIndexProvider>
         <UserProvider>
           <SessionProvider>

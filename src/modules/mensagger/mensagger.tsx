@@ -8,13 +8,30 @@ import {useChatInstances} from "@/lib/hooks/chatsContext";
 import {useContacts} from "@/lib/hooks/contactsContext";
 import Image from "next/image";
 import {useChatNotification, useUserStatusSubscription} from "@/lib/hooks/notifications";
+import {Slide, ToastContainer, toast} from "react-toastify";
+import NotificationToast from "@/lib/common/toast";
 
 function Mensagger({user}: {user: User}) {
   const {contacts} = useContacts();
   const {setChatInstances, chatInstances} = useChatInstances();
   const {toggleChat} = useChatNotification(user);
+  const showContactOnlineToast = (username = "flop@escargot.chat") => {
+    toast(({closeToast}) => <NotificationToast username={username} closeToast={closeToast} />, {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: true,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: false,
+      className: "msn-toast",
+      transition: Slide,
+    });
+    const contactOnlineNotification = new Audio("/sounds/onlineNotification.wav");
 
-  useUserStatusSubscription(user);
+    contactOnlineNotification.play();
+  };
+
+  useUserStatusSubscription(user, showContactOnlineToast);
   const handleOpenChat = (contactId: string) => {
     const chatInstance: ChatInstance = {userId: user.id, contactId};
     const isChatOpen = chatInstances.some((cInstance) => {
@@ -40,6 +57,7 @@ function Mensagger({user}: {user: User}) {
 
   return (
     <Window windowHeaderName="MSN Messenger">
+      <ToastContainer />
       <div className="bg-gray-light min-w-64 w-[500px] ">
         <UserHeader></UserHeader>
 
