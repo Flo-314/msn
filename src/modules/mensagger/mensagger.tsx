@@ -10,26 +10,42 @@ import Image from "next/image";
 import {useChatNotification, useUserStatusSubscription} from "@/lib/hooks/notifications";
 import {Slide, ToastContainer, toast} from "react-toastify";
 import NotificationToast from "@/lib/common/toast";
+import {useCallback} from "react";
 
 function Mensagger({user}: {user: User}) {
   const {contacts} = useContacts();
   const {setChatInstances, chatInstances} = useChatInstances();
-  const {toggleChat} = useChatNotification(user);
-  const showContactOnlineToast = (username = "flop@escargot.chat") => {
-    toast(({closeToast}) => <NotificationToast username={username} closeToast={closeToast} />, {
-      position: "bottom-right",
-      autoClose: 5000,
-      hideProgressBar: true,
-      closeOnClick: false,
-      pauseOnHover: true,
-      draggable: false,
-      className: "msn-toast",
-      transition: Slide,
-    });
-    const contactOnlineNotification = new Audio("/sounds/onlineNotification.wav");
 
-    contactOnlineNotification.play();
-  };
+  const showContactOnlineToast = useCallback(
+    (username: string, isMessage: boolean, message?: string) => {
+      toast(
+        ({closeToast}) => (
+          <NotificationToast
+            isMessage={isMessage}
+            message={message}
+            username={username}
+            closeToast={closeToast}
+          />
+        ),
+        {
+          position: "bottom-right",
+          autoClose: 500000,
+          hideProgressBar: true,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: false,
+          className: "msn-toast",
+          transition: Slide,
+        },
+      );
+      const contactOnlineNotification = new Audio("/sounds/onlineNotification.wav");
+
+      contactOnlineNotification.play();
+    },
+    [],
+  );
+
+  const {toggleChat} = useChatNotification(user, showContactOnlineToast);
 
   useUserStatusSubscription(user, showContactOnlineToast);
   const handleOpenChat = (contactId: string) => {

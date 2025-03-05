@@ -1,16 +1,20 @@
 import Image from "next/image";
 
 interface MSNToastProps {
+  isMessage: boolean;
   username: string;
+  message?: string;
   closeToast?: () => void;
 }
 
 export default function NotificationToast({
+  isMessage = false,
   username = "flop@escargot.chat",
+  message,
   closeToast,
 }: MSNToastProps) {
   return (
-    <div className="text-xs text-darkLabel border border-blueToast-100 p-[1px] bg-white">
+    <div className="text-xs text-darkLabel border border-blueToast-100 p-[1px] bg-white w-44 ">
       {/* Header */}
       <div className="bg-backforth-gradient flex justify-between py-0.5 items-center px-1">
         <div className="flex gap-2">
@@ -40,9 +44,11 @@ export default function NotificationToast({
               className="rounded-xl border-blueToast-300 "
             ></Image>
           </div>
-          <div>
-            <p className="break-words max-w-32">{username} </p>
-            <p>has just signed in</p>
+          <div className="min-w-24">
+            <p className="break-words max-w-32">
+              {username} {isMessage ? "says" : ""}
+            </p>
+            <p>{isMessage ? (message ? message.substring(0, 15) : "") : "has just signed in"}</p>
           </div>
         </div>
         <div className="flex justify-end">

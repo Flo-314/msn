@@ -8,8 +8,12 @@ import {RealtimeChannel} from "@supabase/supabase-js";
 import {useContacts} from "./contactsContext";
 import {createStatusChannel} from "../supabase/subscriptions";
 
-export const useChatNotification = (user: User) => {
+export const useChatNotification = (
+  user: User,
+  showContactOnlineToast: (username: string, isMessage: boolean, message?: string) => void,
+) => {
   const savedStatus = localStorage.getItem("status") as UserStatus;
+  const {getContact} = useContacts();
 
   const contactNotificationSocket = usePartySocket({
     host: partykitUrl,
@@ -23,10 +27,10 @@ export const useChatNotification = (user: User) => {
     onMessage(messageEvent) {
       const message: Message = JSON.parse(messageEvent.data);
       const notificationSound = new Audio("/sounds/incomingMessage.mp3");
+      const contact = getContact(message.contactId);
 
-      if (message.type === message.type) {
-        notificationSound.play();
-      }
+      notificationSound.play();
+      showContactOnlineToast(contact.username, true, message.message);
     },
   });
 
@@ -45,7 +49,7 @@ export const useChatNotification = (user: User) => {
 
 export const useUserStatusSubscription = (
   user: User,
-  showContactOnlineToast: (username: string) => void,
+  showContactOnlineToast: (username: string, isMessage: boolean, message?: string) => void,
 ) => {
   const {contacts, setContacts, getContact} = useContacts();
 
@@ -64,7 +68,7 @@ export const useUserStatusSubscription = (
         const contact = getContact(user_id);
 
         if (contact.status !== UserStatus.Online && status === UserStatus.Online) {
-          showContactOnlineToast(contact.username);
+          showContactOnlineToast(contact.username, false);
         }
 
         // update the updated contact with the new status
@@ -87,5 +91,5 @@ export const useUserStatusSubscription = (
     return () => {
       statusChannel?.unsubscribe();
     };
-  }, [contacts, setContacts, user]);
+  }, [contacts, setContacts, user, showContactOnlineToast, getContact]);
 };
