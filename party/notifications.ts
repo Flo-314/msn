@@ -63,27 +63,21 @@ export default class Server implements Party.Server {
 
     switch (parsedMsg.type) {
       case "chatMessage":
-        console.log(this.openedChats, parsedMsg.contactId);
-
         const isChatOppened = this.openedChats.has(parsedMsg.contactId);
-
-        console.log(isChatOppened);
 
         if (isChatOppened === false) {
           //Send notification to RoomOwner
+          console.log(message);
           roomOwnerConnection?.send(message);
         }
         break;
 
       case "chatToggle":
-        console.log(this.openedChats);
-
         if (parsedMsg.opened) {
           this.openedChats.add(parsedMsg.contactId);
         } else {
           this.openedChats.delete(parsedMsg.contactId);
         }
-        console.log(this.openedChats);
 
         break;
       default:

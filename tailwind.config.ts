@@ -46,7 +46,7 @@ export default {
         negative: "#FF6B2B",
         positive: "#00CC52",
         "positive-dark": "#239E7E",
-
+        input: "#a0a0a0",
         blueToast: {
           100: "#A6B4CF",
           200: "#728EB8",
@@ -62,6 +62,9 @@ export default {
       borderWidth: {
         "0.5": "0.5px",
         "1": "1px",
+      },
+      fontSize: {
+        xxs: ".625rem",
       },
     },
   },

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import {useEffect} from "react";
 
 interface MSNToastProps {
   isMessage: boolean;
@@ -13,6 +14,13 @@ export default function NotificationToast({
   message,
   closeToast,
 }: MSNToastProps) {
+  useEffect(() => {
+    const audioUrl = isMessage ? "/sounds/incomingMessage.mp3" : "/sounds/onlineNotification.wav";
+    const notificationSound = new Audio(audioUrl);
+
+    notificationSound.play();
+  }, [isMessage]);
+
   return (
     <div className="text-xs text-darkLabel border border-blueToast-100 p-[1px] bg-white w-44 ">
       {/* Header */}

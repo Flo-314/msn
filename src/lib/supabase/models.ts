@@ -68,6 +68,20 @@ export async function insertMessage(userId: string, contactId: string, message: 
   return data;
 }
 
+export async function getUserStatus(userId: string) {
+  const {data, error} = await supabase
+    .from("user_status")
+    .select("status")
+    .eq("user_id", userId)
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
 export async function updateUserStatus(userId: string, newStatus: UserStatus) {
   const isValidStatus = (status: UserStatus) => {
     return Object.values(UserStatus).includes(status);

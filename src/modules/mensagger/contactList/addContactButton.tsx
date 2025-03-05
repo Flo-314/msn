@@ -1,13 +1,11 @@
 import Window from "@/lib/common/Window";
-import {useContacts} from "@/lib/hooks/contactsContext";
-import {addContact} from "@/lib/supabase/models";
+
 import Image from "next/image";
 import {useState} from "react";
+import AddContactWindow from "./AddContactWindow";
 
-function AddContactButton({userId}: {userId: string}) {
+function AddContactButton() {
   const [isAddingContact, setIsAddingContact] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>("");
-  const {setContacts} = useContacts();
 
   return (
     <div
@@ -35,24 +33,7 @@ function AddContactButton({userId}: {userId: string}) {
             setIsAddingContact(false);
           }}
         >
-          <button
-            className="text-red-700 text-xl mx-2 border-2 "
-            onClick={async () => {
-              const contact = await addContact(userId, email);
-
-              if (contact) {
-                setContacts((prev) => [...prev, contact]);
-              }
-            }}
-          >
-            Add a contact
-          </button>
-          <input
-            type="text"
-            placeholder="introduce contact email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+          <AddContactWindow closeWindow={() => setIsAddingContact(false)} />
         </Window>
       )}
     </div>

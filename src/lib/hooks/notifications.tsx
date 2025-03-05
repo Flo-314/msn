@@ -13,7 +13,7 @@ export const useChatNotification = (
   showContactOnlineToast: (username: string, isMessage: boolean, message?: string) => void,
 ) => {
   const savedStatus = localStorage.getItem("status") as UserStatus;
-  const {getContact} = useContacts();
+  const {getContact, syncNewContact} = useContacts();
 
   const contactNotificationSocket = usePartySocket({
     host: partykitUrl,
@@ -24,12 +24,20 @@ export const useChatNotification = (
       return {initialStatus: savedStatus ?? "connected", token: null};
     },
 
-    onMessage(messageEvent) {
+    async onMessage(messageEvent) {
       const message: Message = JSON.parse(messageEvent.data);
-      const notificationSound = new Audio("/sounds/incomingMessage.mp3");
-      const contact = getContact(message.contactId);
 
-      notificationSound.play();
+      let contact = getContact(message.contactId);
+
+      if (!contact) {
+        //if contact doesent exists is because the user is the one who sent the message is a new contact not added by the user.
+        const newContact = await syncNewContact(message.contactId);
+
+        if (newContact) {
+          contact = newContact;
+        }
+      }
+
       showContactOnlineToast(contact.username, true, message.message);
     },
   });

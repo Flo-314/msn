@@ -5,7 +5,6 @@ import ContactList from "./contactList/contactList";
 import Ad from "./Ad";
 import {ChatInstance, User} from "@/types/types";
 import {useChatInstances} from "@/lib/hooks/chatsContext";
-import {useContacts} from "@/lib/hooks/contactsContext";
 import Image from "next/image";
 import {useChatNotification, useUserStatusSubscription} from "@/lib/hooks/notifications";
 import {Slide, ToastContainer, toast} from "react-toastify";
@@ -13,7 +12,6 @@ import NotificationToast from "@/lib/common/toast";
 import {useCallback} from "react";
 
 function Mensagger({user}: {user: User}) {
-  const {contacts} = useContacts();
   const {setChatInstances, chatInstances} = useChatInstances();
 
   const showContactOnlineToast = useCallback(
@@ -38,9 +36,6 @@ function Mensagger({user}: {user: User}) {
           transition: Slide,
         },
       );
-      const contactOnlineNotification = new Audio("/sounds/onlineNotification.wav");
-
-      contactOnlineNotification.play();
     },
     [],
   );
@@ -90,9 +85,9 @@ function Mensagger({user}: {user: User}) {
           </div>
 
           <div className=" border-black  bg-msnLightGray">
-            <AddContactButton userId={user.id}></AddContactButton>
+            <AddContactButton></AddContactButton>
             <div className="">
-              <ContactList contacts={contacts} handleOpenChat={handleOpenChat}></ContactList>
+              <ContactList handleOpenChat={handleOpenChat}></ContactList>
               <Ad></Ad>
             </div>
           </div>
