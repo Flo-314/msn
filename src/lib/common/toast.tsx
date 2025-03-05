@@ -36,6 +36,7 @@ export default function NotificationToast({
               alt="profile image"
               src="/dog.webp"
               fill
+              sizes={"48px"}
               className="rounded-xl border-blueToast-300 "
             ></Image>
           </div>

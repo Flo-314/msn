@@ -9,8 +9,14 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="crt h-full w-full  overflow-hidden   ">
-      <Image alt="windows xp wallpaper" priority={true} src="/png/xpWallpaper.jpeg" fill></Image>
+    <div className="crt h-full w-full  overflow-hidden absolute   ">
+      <Image
+        alt="windows xp wallpaper"
+        sizes="100vw"
+        priority={true}
+        src="/png/xpWallpaper.jpeg"
+        fill
+      ></Image>
       <ZIndexProvider>
         <UserProvider>
           <SessionProvider>

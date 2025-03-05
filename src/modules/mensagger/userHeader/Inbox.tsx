@@ -15,7 +15,6 @@ function Inbox() {
           src={"/icons/userHeader/msnTodayIcon.png"}
           width={15}
           height={15}
-          className=""
           alt="lettericon"
         ></Image>
         <p className="text-blueText text-xs ">MSN Today</p>

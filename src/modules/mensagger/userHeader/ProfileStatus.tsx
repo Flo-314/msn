@@ -21,7 +21,13 @@ function ProfileStatus() {
   return (
     <div className="flex gap-4 z-10 relative px-2.5 pt-2.5">
       <div className="w-14 h-14 relative  border border-blue-dark rounded-xl mb-4">
-        <Image alt="profile image" src="/dog.webp" fill className="rounded-xl "></Image>
+        <Image
+          alt="profile image"
+          src="/dog.webp"
+          sizes={"54px"}
+          fill
+          className="rounded-xl "
+        ></Image>
       </div>
 
       <div className="flex flex-col gap-1 mt-1 ">
