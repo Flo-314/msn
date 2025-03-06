@@ -6,6 +6,7 @@ import {Session} from "@supabase/supabase-js";
 import {supabase} from "../utils/supabase/client";
 import {useUser} from "./userContext";
 import {getProfileById} from "../supabase/models";
+import {UserStatus} from "@/types/types";
 
 const SessionContext = createContext<{
   session: Session | null;
@@ -24,8 +25,15 @@ export const SessionProvider = ({children}: {children: ReactNode}) => {
       const sessionUser = newSession?.user;
 
       if (sessionUser?.id && sessionUser?.email && !user) {
+        const baseStatus = window.localStorage.getItem("status") as UserStatus | undefined;
+
         getProfileById(sessionUser.id).then((profile) => {
-          setUser({id: sessionUser.id, email: sessionUser.email ?? "", username: profile.username});
+          setUser({
+            id: sessionUser.id,
+            email: sessionUser.email ?? "",
+            username: profile.username,
+            status: baseStatus ?? UserStatus.Offline,
+          });
         });
       }
     });

@@ -1,6 +1,8 @@
+import TriangleIcon from "@/lib/common/TriangleIcon";
+
 function PersonalMessage() {
   return (
-    <div className="flex">
+    <div className="flex px-1 border  border-transparent hover:border-blue-dark">
       <input
         readOnly={true}
         type="text"
@@ -8,7 +10,7 @@ function PersonalMessage() {
         value="asd"
         className="text-msngray text-xs bg-transparent w-8 "
       />
-      <button className="text-[6px]">▼</button>
+      <TriangleIcon></TriangleIcon>
     </div>
   );
 }

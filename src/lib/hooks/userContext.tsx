@@ -1,12 +1,14 @@
 "use client";
 
-import {User} from "@/types/types";
+import {User, UserStatus} from "@/types/types";
 import React, {createContext, useState, useContext, ReactNode} from "react";
+import {updateUserStatus as updateUserStatusRow} from "../supabase/models";
 
 const UserContext = createContext<
   | {
       user: User | null;
       setUser: React.Dispatch<React.SetStateAction<User | null>>;
+      updateUserStatus: (status: UserStatus) => void;
     }
   | undefined
 >(undefined);
@@ -14,7 +16,21 @@ const UserContext = createContext<
 export const UserProvider = ({children}: {children: ReactNode}) => {
   const [user, setUser] = useState<User | null>(null);
 
-  return <UserContext.Provider value={{user, setUser}}>{children}</UserContext.Provider>;
+  const updateUserStatus = async (status: UserStatus): Promise<boolean> => {
+    if (!user) return false;
+    const userStatusUpdate = await updateUserStatusRow(user?.id, status);
+
+    if (!userStatusUpdate) return false;
+    setUser({...user, status: status});
+
+    return true;
+  };
+
+  return (
+    <UserContext.Provider value={{user, setUser, updateUserStatus}}>
+      {children}
+    </UserContext.Provider>
+  );
 };
 
 export const useUser = () => {

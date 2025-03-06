@@ -1,7 +1,7 @@
 export type User = {
   id: string;
   email: string;
-  state?: UserStatus;
+  status: UserStatus;
   username: string;
 };
 
@@ -42,3 +42,17 @@ export type ChatToggle = {
 };
 
 export type NotificationMessage = Message | ChatToggle;
+
+export enum statusIcons {
+  Online = "/icons/contact/connectedContactIcon.png",
+  Away = "/icons/contact/awayContactIcon.png",
+  Offline = "/icons/contact/offlineContactIcon.png",
+  Busy = "/icons/contact/busyContactIcon.png",
+}
+
+export const STATUS_ICONS: Record<UserStatus, string> = {
+  [UserStatus.Online]: "/icons/contact/connectedContactIcon.png",
+  [UserStatus.Away]: "/icons/contact/awayContactIcon.png",
+  [UserStatus.Offline]: "/icons/contact/offlineContactIcon.png",
+  [UserStatus.Busy]: "/icons/contact/busyContactIcon.png",
+};

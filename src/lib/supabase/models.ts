@@ -62,7 +62,7 @@ export async function insertMessage(userId: string, contactId: string, message: 
     .insert([{user_id: userId, contact_id: contactId, message}]);
 
   if (error) {
-    console.log(error);
+    throw error;
   }
 
   return data;
@@ -82,7 +82,7 @@ export async function getUserStatus(userId: string) {
   return data;
 }
 
-export async function updateUserStatus(userId: string, newStatus: UserStatus) {
+export async function updateUserStatus(userId: string, newStatus: UserStatus): Promise<boolean> {
   const isValidStatus = (status: UserStatus) => {
     return Object.values(UserStatus).includes(status);
   };
@@ -91,7 +91,7 @@ export async function updateUserStatus(userId: string, newStatus: UserStatus) {
     throw new Error("invalid state");
   }
 
-  const {data, error} = await supabase
+  const {error} = await supabase
     .from("user_status")
     .update({status: newStatus})
     .eq("user_id", userId)
@@ -101,5 +101,5 @@ export async function updateUserStatus(userId: string, newStatus: UserStatus) {
     throw error;
   }
 
-  return data;
+  return true;
 }
