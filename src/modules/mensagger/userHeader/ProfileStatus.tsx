@@ -1,5 +1,5 @@
 import Image from "next/image";
-import PersonalMessage from "./PersonalMessage";
+import PersonalMessage from "./personalMessage/PersonalMessage";
 import Inbox from "./Inbox";
 
 import ProfileDropdown from "./profileStatusDropDown/ProfileDropdown";

@@ -2,13 +2,17 @@
 
 import {User, UserStatus} from "@/types/types";
 import React, {createContext, useState, useContext, ReactNode} from "react";
-import {updateUserStatus as updateUserStatusRow} from "../supabase/models";
+import {
+  updateUserStatus as updateUserStatusRow,
+  updatePersonalMessage as updatePersonalMessageRow,
+} from "../supabase/models";
 
 const UserContext = createContext<
   | {
       user: User | null;
       setUser: React.Dispatch<React.SetStateAction<User | null>>;
-      updateUserStatus: (status: UserStatus) => void;
+      updateUserStatus: (status: UserStatus) => Promise<boolean>;
+      updatePersonalMessage: (personalMessage: string) => Promise<boolean>;
     }
   | undefined
 >(undefined);
@@ -25,9 +29,18 @@ export const UserProvider = ({children}: {children: ReactNode}) => {
 
     return true;
   };
+  const updatePersonalMessage = async (personalMessage: string): Promise<boolean> => {
+    if (!user) return false;
+    const personalMessageUpdate = updatePersonalMessageRow(user?.id, personalMessage);
+
+    if (!personalMessageUpdate) return false;
+    setUser({...user, personalMessage: personalMessage});
+
+    return true;
+  };
 
   return (
-    <UserContext.Provider value={{user, setUser, updateUserStatus}}>
+    <UserContext.Provider value={{user, setUser, updateUserStatus, updatePersonalMessage}}>
       {children}
     </UserContext.Provider>
   );

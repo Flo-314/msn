@@ -3,6 +3,7 @@ export type User = {
   email: string;
   status: UserStatus;
   username: string;
+  personalMessage: string;
 };
 
 export type Contact = {
@@ -15,6 +16,7 @@ export type Contact = {
   first_name?: string | null;
   last_name?: string | null;
   updated_at?: string | null;
+  personalMessage?: string | null;
 };
 
 export type ChatInstance = {

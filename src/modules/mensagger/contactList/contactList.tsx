@@ -58,6 +58,7 @@ function ContactList({handleOpenChat}: {handleOpenChat: (contactId: string) => v
                       contactId={contact.contactId}
                       handleOpenChat={handleOpenChat}
                       status={contact.status}
+                      personalMessage={contact.personalMessage}
                     />
                   ))}
                 </div>

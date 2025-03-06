@@ -33,6 +33,7 @@ export default class Server implements Party.Server {
   private openedChats: Set<string> = new Set(); // Evita duplicados
   constructor(readonly room: Party.Room) {}
   onConnect(connection: Party.Connection, ctx: Party.ConnectionContext): void | Promise<void> {
+    //When a user connects to the room, update the user_status to online.
     const initialStatus =
       (new URL(ctx.request.url).searchParams.get("initialStatus") as UserStatus) ?? "online";
 

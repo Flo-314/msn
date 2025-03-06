@@ -50,7 +50,8 @@ export async function getContacts(userId: string) {
     contactId: contact.contact_id,
     email: contact.email,
     username: contact.username,
-    status: contact.status,
+    status: contact.status as UserStatus,
+    personalMessage: contact.personal_message,
   }));
 
   return contactData;
@@ -68,10 +69,10 @@ export async function insertMessage(userId: string, contactId: string, message: 
   return data;
 }
 
-export async function getUserStatus(userId: string) {
+export async function fetchUserStatus(userId: string) {
   const {data, error} = await supabase
     .from("user_status")
-    .select("status")
+    .select("*")
     .eq("user_id", userId)
     .single();
 
@@ -103,3 +104,17 @@ export async function updateUserStatus(userId: string, newStatus: UserStatus): P
 
   return true;
 }
+
+export const updatePersonalMessage = async (
+  userId: string,
+  personalMessage: string,
+): Promise<boolean> => {
+  const {error} = await supabase
+    .from("user_status")
+    .update({personal_message: personalMessage})
+    .eq("user_id", userId);
+
+  if (error) throw error;
+
+  return true;
+};

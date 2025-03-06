@@ -1,9 +1,9 @@
 "use client";
 
 import {Contact, UserStatus} from "@/types/types";
-import React, {createContext, useState, useContext, ReactNode, useEffect} from "react";
+import React, {createContext, useState, useContext, ReactNode, useEffect, useRef} from "react";
 import {useUser} from "./userContext";
-import {getContacts, getProfileById, getUserStatus} from "../supabase/models";
+import {getContacts, getProfileById, fetchUserStatus} from "../supabase/models";
 import {addContact as addContactToSupabase} from "@/lib/supabase/models";
 
 const ContactsContext = createContext<
@@ -18,6 +18,8 @@ const ContactsContext = createContext<
 >(undefined);
 
 export const ContactsProvider = ({children}: {children: ReactNode}) => {
+  const userLoaded = useRef(false);
+
   const {user} = useUser();
   const [contacts, setContacts] = useState<Contact[]>([]);
 
@@ -28,7 +30,7 @@ export const ContactsProvider = ({children}: {children: ReactNode}) => {
 
     if (!contact) return false;
 
-    const contactStatus = await getUserStatus(contactId);
+    const contactStatus = await fetchUserStatus(contactId);
 
     if (!contactStatus) return false;
 
@@ -50,7 +52,7 @@ export const ContactsProvider = ({children}: {children: ReactNode}) => {
     const newContact = await addContactToSupabase(user?.id, contactEmail);
 
     if (newContact) {
-      const contactStatus = await getUserStatus(newContact.contactId);
+      const contactStatus = await fetchUserStatus(newContact.contactId);
 
       newContact.status = contactStatus.status as UserStatus;
       await setContacts([...contacts, newContact]);
@@ -63,9 +65,10 @@ export const ContactsProvider = ({children}: {children: ReactNode}) => {
 
   // Fetch contacts when user is logged in.
   useEffect(() => {
-    if (user) {
+    if (user && !userLoaded.current) {
       getContacts(user.id).then((contacts) => {
         setContacts(contacts ?? []);
+        userLoaded.current = true;
       });
     }
   }, [user]);
