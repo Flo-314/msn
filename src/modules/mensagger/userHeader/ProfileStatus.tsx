@@ -5,19 +5,6 @@ import Inbox from "./Inbox";
 import ProfileDropdown from "./profileStatusDropDown/ProfileDropdown";
 
 function ProfileStatus() {
-  /* 
-  
-   onChange={(event) => {
-              const status = event.currentTarget.value as UserStatus;
-
-              if (user) {
-                updateUserStatus(user?.id, status);
-                setStatus(status);
-              }
-            }}
-  
-  */
-
   return (
     <div className="flex gap-2 z-10 relative px-2.5 pt-1 ">
       <div className="  flex flex-col items-center ">

@@ -12,8 +12,6 @@ function ContactCard({
   status,
   personalMessage,
 }: ContactCardProps) {
-  console.log(personalMessage);
-
   return (
     <div className="flex items-center gap-2  rounded ml-4">
       <StatusIcon userStatus={status}></StatusIcon>

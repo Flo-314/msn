@@ -5,6 +5,7 @@ import React, {createContext, useState, useContext, ReactNode} from "react";
 import {
   updateUserStatus as updateUserStatusRow,
   updatePersonalMessage as updatePersonalMessageRow,
+  updateUsername as updateUsernameRow,
 } from "../supabase/models";
 
 const UserContext = createContext<
@@ -13,6 +14,7 @@ const UserContext = createContext<
       setUser: React.Dispatch<React.SetStateAction<User | null>>;
       updateUserStatus: (status: UserStatus) => Promise<boolean>;
       updatePersonalMessage: (personalMessage: string) => Promise<boolean>;
+      updateUsername: (username: string) => Promise<boolean>;
     }
   | undefined
 >(undefined);
@@ -38,9 +40,21 @@ export const UserProvider = ({children}: {children: ReactNode}) => {
 
     return true;
   };
+  const updateUsername = async (username: string): Promise<boolean> => {
+    if (!user) return false;
+    const usernameUpdate = await updateUsernameRow(user?.id, username);
+
+    if (!usernameUpdate) return false;
+
+    setUser({...user, username: username});
+
+    return true;
+  };
 
   return (
-    <UserContext.Provider value={{user, setUser, updateUserStatus, updatePersonalMessage}}>
+    <UserContext.Provider
+      value={{user, setUser, updateUserStatus, updatePersonalMessage, updateUsername}}
+    >
       {children}
     </UserContext.Provider>
   );

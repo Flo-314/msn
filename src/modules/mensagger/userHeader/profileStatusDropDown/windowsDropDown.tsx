@@ -52,13 +52,6 @@ function WindowsDropDown({onClose}: WindowsDropDownProps) {
         }}
       />
       <hr className="border-input" />
-
-      <DropDownCard
-        text="Personal Settings..."
-        onClick={() => {
-          onClose();
-        }}
-      />
     </ul>
   );
 }

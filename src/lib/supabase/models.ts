@@ -118,3 +118,11 @@ export const updatePersonalMessage = async (
 
   return true;
 };
+
+export const updateUsername = async (userId: string, username: string): Promise<boolean> => {
+  const {error} = await supabase.from("profiles").update({username}).eq("id", userId);
+
+  if (error) throw error;
+
+  return true;
+};
