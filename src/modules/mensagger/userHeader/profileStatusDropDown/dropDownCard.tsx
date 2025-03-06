@@ -1,7 +1,6 @@
 "use client";
 import {StatusIcon} from "@/modules/mensagger/contactList/StatusIcon";
 import {UserStatus} from "@/types/types";
-import {useState} from "react";
 
 function DropDownCard({
   text,

@@ -2,15 +2,8 @@
 
 import {useEffect, useRef} from "react";
 import DropDownCard from "./dropDownCard";
-import {UserStatus} from "@/types/types";
 import {useUser} from "@/lib/hooks/userContext";
-
-const statusOptions: {label: string; status: UserStatus}[] = [
-  {label: "Online", status: UserStatus.Online},
-  {label: "Busy", status: UserStatus.Busy},
-  {label: "Away", status: UserStatus.Away},
-  {label: "Appear Offline", status: UserStatus.Offline},
-];
+import {STATUS_OPTIONS} from "@/types/types";
 
 type WindowsDropDownProps = {
   onClose: () => void;
@@ -39,7 +32,7 @@ function WindowsDropDown({onClose}: WindowsDropDownProps) {
 
   return (
     <ul ref={dropdownRef} className="absolute top-full   z-50  border border-input select-none">
-      {statusOptions.map((option, index) => (
+      {STATUS_OPTIONS.map((option, index) => (
         <DropDownCard
           onClick={() => {
             updateUserStatus(option.status);

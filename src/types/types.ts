@@ -56,3 +56,17 @@ export const STATUS_ICONS: Record<UserStatus, string> = {
   [UserStatus.Offline]: "/icons/contact/offlineContactIcon.png",
   [UserStatus.Busy]: "/icons/contact/busyContactIcon.png",
 };
+
+export const STATUS_OPTIONS = [
+  {label: "Online", status: UserStatus.Online},
+  {label: "Busy", status: UserStatus.Busy},
+  {label: "Away", status: UserStatus.Away},
+  {label: "Appear Offline", status: UserStatus.Offline},
+] as const;
+
+export const STATUS_DESCRIPTIONS: Record<UserStatus, string> = {
+  [UserStatus.Online]: "Online",
+  [UserStatus.Busy]: "Busy",
+  [UserStatus.Away]: "Away",
+  [UserStatus.Offline]: "Appear Offline",
+};
