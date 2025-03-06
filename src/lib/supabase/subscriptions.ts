@@ -12,7 +12,7 @@ export const createStatusChannel = (
   supabase.channel("statusChanges").on(
     "postgres_changes",
     {
-      event: "*",
+      event: "UPDATE",
       schema: "public",
       table: "user_status",
       filter,

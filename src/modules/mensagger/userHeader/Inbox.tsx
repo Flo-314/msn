@@ -2,7 +2,7 @@ import Image from "next/image";
 
 function Inbox() {
   return (
-    <div className="flex z-10 gap-2 mt-2  x">
+    <div className="flex z-10 gap-2 mt-1  x">
       <div className="border flex items-center py-0.5 px-1 border-transparent hover:border-blue-dark hover:bg-gray-light">
         <Image
           src={"/icons/userHeader/mailIcon.png"}

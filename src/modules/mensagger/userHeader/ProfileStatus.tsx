@@ -19,18 +19,24 @@ function ProfileStatus() {
   */
 
   return (
-    <div className="flex gap-2 z-10 relative px-2.5 pt-2.5 ">
-      <div className="w-14 h-14 relative  border border-blue-dark rounded-xl mb-4">
+    <div className="flex gap-2 z-10 relative px-2.5 pt-1 ">
+      <div className="  flex flex-col items-center ">
         <Image
+          width={54}
+          height={54}
           alt="profile image"
           src="/dog.webp"
-          sizes={"54px"}
-          fill
-          className="rounded-xl "
-        ></Image>
+          className=" border border-blue-dark rounded-xl "
+        />
+        <Image
+          width={50}
+          height={54}
+          alt="profile image shadow"
+          src="/png/mensaggerWindow/profilePhotoShadow.png"
+        />
       </div>
 
-      <div className="flex flex-col gap-1 mt-1  ">
+      <div className="flex flex-col    ">
         <ProfileDropdown />
 
         <PersonalMessage></PersonalMessage>
