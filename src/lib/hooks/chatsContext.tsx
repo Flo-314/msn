@@ -1,7 +1,7 @@
 "use client";
 
 import {ChatInstance} from "@/types/types";
-import React, {createContext, useState, useContext, ReactNode, useEffect} from "react";
+import React, {createContext, useState, useContext, ReactNode} from "react";
 
 const ChatsInstancesContext = createContext<
   | {
@@ -18,10 +18,6 @@ export const ChatsInstancesProvider = ({children}: {children: ReactNode}) => {
   const closeChatInstance = (contactId: string): void => {
     setChatInstances((prev) => prev.filter((chat) => chat.contactId !== contactId));
   };
-
-  useEffect(() => {
-    console.log(chatsInstances);
-  }, [chatsInstances]);
 
   return (
     <ChatsInstancesContext.Provider

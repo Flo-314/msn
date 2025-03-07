@@ -2,7 +2,7 @@
 
 import usePartySocket from "partysocket/react";
 import {partykitUrl} from "../utils/partykit/partykitUtils";
-import {Message, NewContact, User, UserStatus} from "@/types/types";
+import {MessageNotification, NewContact, User, UserStatus} from "@/types/types";
 import {useEffect} from "react";
 import {RealtimeChannel} from "@supabase/supabase-js";
 import {useContacts} from "./contactsContext";
@@ -25,7 +25,7 @@ export const useChatNotification = (
     },
 
     async onMessage(messageEvent) {
-      const message: Message | NewContact = JSON.parse(messageEvent.data);
+      const message: MessageNotification | NewContact = JSON.parse(messageEvent.data);
 
       if (message.type === "newContact") {
         const newContact = message as NewContact;

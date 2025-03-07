@@ -9,20 +9,15 @@ export const createStatusChannel = (
     }>,
   ) => void,
 ): RealtimeChannel =>
-  supabase
-    .channel("statusChanges")
-    .on(
-      "postgres_changes",
-      {
-        event: "UPDATE",
-        schema: "public",
-        table: "user_status",
-        filter,
-      },
-      (payload) => {
-        payloadCallback(payload);
-      },
-    )
-    .on("postgres_changes", {event: "*", schema: "public", table: "countries"}, (payload) => {
-      console.log("Change received!", payload);
-    });
+  supabase.channel("statusChanges").on(
+    "postgres_changes",
+    {
+      event: "UPDATE",
+      schema: "public",
+      table: "user_status",
+      filter,
+    },
+    (payload) => {
+      payloadCallback(payload);
+    },
+  );

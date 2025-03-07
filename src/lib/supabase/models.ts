@@ -1,4 +1,4 @@
-import {Contact, UserStatus} from "@/types/types";
+import {Contact, Message, UserStatus} from "@/types/types";
 import {supabase} from "../utils/supabase/client";
 
 export async function getProfileById(id: string) {
@@ -126,3 +126,26 @@ export const updateUsername = async (userId: string, username: string): Promise<
 
   return true;
 };
+
+export async function getMessages(
+  userId: string,
+  contactId: string,
+  messageLimit?: number,
+  dateFilter?: string,
+) {
+  const {data, error} = await supabase.rpc("get_messages", {
+    p_contact_id: contactId,
+    p_user_id: userId,
+    p_limit: messageLimit,
+    p_created_at: dateFilter,
+  });
+
+  if (error) {
+    return null;
+  }
+  const messages: Message[] = data.map(({contact_id, user_id, message, created_at}) => {
+    return {contactId: contact_id, userId: user_id, message, createdAt: created_at};
+  });
+
+  return messages;
+}

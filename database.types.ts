@@ -160,6 +160,20 @@ export type Database = {
           personal_message: string
         }[]
       }
+      get_messages: {
+        Args: {
+          p_user_id: string
+          p_contact_id: string
+          p_created_at?: string
+          p_limit?: number
+        }
+        Returns: {
+          user_id: string
+          contact_id: string
+          message: string
+          created_at: string
+        }[]
+      }
     }
     Enums: {
       "status enum": "online" | "offline" | "away" | "busy"

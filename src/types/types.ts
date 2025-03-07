@@ -22,6 +22,7 @@ export type Contact = {
 export type ChatInstance = {
   userId: string;
   contactId: string;
+  messages: Message[];
 };
 
 export enum UserStatus {
@@ -32,6 +33,13 @@ export enum UserStatus {
 }
 
 export type Message = {
+  contactId: string;
+  userId: string;
+  message: string;
+  createdAt: string;
+};
+
+export type MessageNotification = {
   type: "chatMessage";
   contactId: string;
   message: string;
@@ -45,7 +53,7 @@ export type ChatToggle = {
 
 export type NewContact = User & {type: "newContact"; contactId: string};
 
-export type NotificationMessage = Message | ChatToggle | NewContact;
+export type NotificationMessage = MessageNotification | ChatToggle | NewContact;
 
 export enum statusIcons {
   Online = "/icons/contact/connectedContactIcon.png",

@@ -1,14 +1,16 @@
 "use client";
 
 import type React from "react";
-import {createContext, useContext, useState} from "react";
+import {createContext, useContext, useEffect, useState} from "react";
 
 import {Contact, Message} from "@/types/types";
 import {useChatInstances} from "@/lib/hooks/chatsContext";
 import {useContacts} from "@/lib/hooks/contactsContext";
 import usePartySocket from "partysocket/react";
 import {getChatRoomId, partykitUrl} from "@/lib/utils/partykit/partykitUtils";
-import {insertMessage} from "@/lib/supabase/models";
+import {getMessages, insertMessage} from "@/lib/supabase/models";
+import {useUser} from "./userContext";
+import {format} from "date-fns";
 
 interface ChatContextType {
   text: string;
@@ -35,6 +37,7 @@ export function ChatProvider({
   const [text, setText] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const {getContact} = useContacts();
+  const {user} = useUser();
   const contact = getContact(contactId);
 
   const chatPartySocket = usePartySocket({
@@ -43,13 +46,10 @@ export function ChatProvider({
     room: getChatRoomId(userId, contactId),
     id: userId,
     onMessage(messageEvent) {
-      try {
-        const message: Message = JSON.parse(messageEvent.data);
+      if (!user) return;
+      const message: Message = JSON.parse(messageEvent.data);
 
-        if (message.type === "chatMessage") {
-          setMessages((prev) => [...prev, JSON.parse(message.message)]);
-        }
-      } catch {}
+      setMessages((prev) => [...prev, message]);
     },
   });
 
@@ -66,11 +66,12 @@ export function ChatProvider({
 
   const handleSend = () => {
     if (!text.trim()) return;
-
+    if (!user) return;
     const newMessage: Message = {
-      contactId: userId,
+      userId: user.id,
+      contactId: contactId,
       message: text,
-      type: "chatMessage",
+      createdAt: format(new Date(), "MM-dd"),
     };
 
     chatPartySocket.send(JSON.stringify(newMessage));
@@ -81,6 +82,18 @@ export function ChatProvider({
     setMessages((prev) => [...prev, newMessage]);
     setText("");
   };
+
+  useEffect(() => {
+    if (!user || !contact) return;
+    const loadChatHistory = () => {
+      getMessages(contact.contactId, user.id, 50).then((messages) => {
+        if (!messages) return;
+        setMessages(messages);
+      });
+    };
+
+    loadChatHistory();
+  }, [user, contact]);
 
   return (
     <ChatContext.Provider
