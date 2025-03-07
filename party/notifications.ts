@@ -2,7 +2,7 @@ import {createClient} from "@supabase/supabase-js";
 
 import type * as Party from "partykit/server";
 import {Database} from "../database.types";
-import {NotificationMessage, UserStatus} from "@/types/types";
+import {NewContact, NotificationMessage, UserStatus} from "@/types/types";
 
 const supabase = createClient<Database>(
   process.env.NEXT_PUBLIC_SUPABASE_URL as string,
@@ -28,6 +28,14 @@ const supabase = createClient<Database>(
 //                        sends a notification to the roomOwner.
 //
 //  chatToggle: sended by roomOwner when they open a chat.
+//
+//  newContact: User A(lf) adds partyroomOwner as a contact.
+//              User A(lf) sends a notification to the roomOwner with his user profile.
+//              RoomOwner receives the notification and updates his contact list with A(LF).
+//
+//
+//
+//
 
 export default class Server implements Party.Server {
   private openedChats: Set<string> = new Set(); // Evita duplicados
@@ -46,11 +54,12 @@ export default class Server implements Party.Server {
           .eq("user_id", connection.id);
 
         if (error) {
-          console.error("Error updating status:", error); // Evita romper el Worker
+          console.error("Error updating status:", error);
         }
       }, 500);
     }
   }
+
   onMessage(message: string) {
     const roomOwnerConnection = this.room.getConnection(this.room.id);
 
@@ -68,7 +77,6 @@ export default class Server implements Party.Server {
 
         if (isChatOppened === false) {
           //Send notification to RoomOwner
-          console.log(message);
           roomOwnerConnection?.send(message);
         }
         break;
@@ -81,8 +89,27 @@ export default class Server implements Party.Server {
         }
 
         break;
+      case "newContact":
+        parsedMsg.contactId = parsedMsg.id;
+        roomOwnerConnection?.send(message);
+        break;
+
       default:
         break;
+    }
+  }
+
+  async onRequest(req: Party.Request) {
+    if (req.method === "POST") {
+      const newContact = await req.json<NewContact>();
+      const roomOwnerConnection = this.room.getConnection(this.room.id);
+
+      newContact.contactId = newContact.id;
+      roomOwnerConnection?.send(JSON.stringify(newContact));
+
+      return new Response("OK");
+    } else {
+      return new Response("Method not allowed", {status: 405});
     }
   }
 
@@ -96,7 +123,7 @@ export default class Server implements Party.Server {
         .eq("user_id", connection.id);
 
       if (error) {
-        console.error("Error updating status:", error); // Evita romper el Worker
+        console.error("Error updating status:", error);
       }
     }
   }

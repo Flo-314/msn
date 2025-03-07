@@ -43,7 +43,9 @@ export type ChatToggle = {
   opened: boolean;
 };
 
-export type NotificationMessage = Message | ChatToggle;
+export type NewContact = User & {type: "newContact"; contactId: string};
+
+export type NotificationMessage = Message | ChatToggle | NewContact;
 
 export enum statusIcons {
   Online = "/icons/contact/connectedContactIcon.png",

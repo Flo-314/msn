@@ -1,6 +1,8 @@
 REFACTORS:
 
 FEATURES: -auth check en cada conección a partykit
+-que fetchie los chats antiguos.(En principio 20, luego un infinite scroll)
+-que un contacto pueda saber cuando lo han agregado; cuando ha cambiado el username
 
 Posibles bugs: -USUARIOS PUEden agregarse a si mismo
   -Cuando se abre un chat, mensagger envia una señal para que se sepa que este chat esta abierto. si <Chat> se cierra

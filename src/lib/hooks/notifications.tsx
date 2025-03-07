@@ -2,7 +2,7 @@
 
 import usePartySocket from "partysocket/react";
 import {partykitUrl} from "../utils/partykit/partykitUtils";
-import {Message, User, UserStatus} from "@/types/types";
+import {Message, NewContact, User, UserStatus} from "@/types/types";
 import {useEffect} from "react";
 import {RealtimeChannel} from "@supabase/supabase-js";
 import {useContacts} from "./contactsContext";
@@ -13,7 +13,7 @@ export const useChatNotification = (
   showContactOnlineToast: (username: string, isMessage: boolean, message?: string) => void,
 ) => {
   const savedStatus = localStorage.getItem("status") as UserStatus;
-  const {getContact, syncNewContact} = useContacts();
+  const {getContact, syncNewContact, setContacts} = useContacts();
 
   const contactNotificationSocket = usePartySocket({
     host: partykitUrl,
@@ -25,18 +25,16 @@ export const useChatNotification = (
     },
 
     async onMessage(messageEvent) {
-      const message: Message = JSON.parse(messageEvent.data);
+      const message: Message | NewContact = JSON.parse(messageEvent.data);
 
-      let contact = getContact(message.contactId);
+      if (message.type === "newContact") {
+        const newContact = message as NewContact;
 
-      if (!contact) {
-        //if contact doesent exists is because the user is the one who sent the message is a new contact not added by the user.
-        const newContact = await syncNewContact(message.contactId);
+        setContacts((prev) => [...prev, newContact]);
 
-        if (newContact) {
-          contact = newContact;
-        }
+        return;
       }
+      const contact = getContact(message.contactId);
 
       showContactOnlineToast(contact.username, true, message.message);
     },
