@@ -2,7 +2,7 @@
 
 import usePartySocket from "partysocket/react";
 import {partykitUrl} from "../utils/partykit/partykitUtils";
-import {MessageNotification, NewContact, User, UserStatus} from "@/types/types";
+import {Message, NewContact, User, UserStatus} from "@/types/types";
 import {useEffect} from "react";
 import {RealtimeChannel} from "@supabase/supabase-js";
 import {useContacts} from "./contactsContext";
@@ -10,7 +10,7 @@ import {createStatusChannel} from "../supabase/subscriptions";
 
 export const useChatNotification = (
   user: User,
-  showContactOnlineToast: (username: string, isMessage: boolean, message?: string) => void,
+  notificationToast: (username: string, isMessage: boolean, message?: string) => void,
 ) => {
   const savedStatus = localStorage.getItem("status") as UserStatus;
   const {getContact, setContacts} = useContacts();
@@ -25,7 +25,7 @@ export const useChatNotification = (
     },
 
     async onMessage(messageEvent) {
-      const message: MessageNotification | NewContact = JSON.parse(messageEvent.data);
+      const message: (Message & {type: "chatMessage"}) | NewContact = JSON.parse(messageEvent.data);
 
       if (message.type === "newContact") {
         const newContact = message as NewContact;
@@ -34,28 +34,31 @@ export const useChatNotification = (
 
         return;
       }
-      const contact = getContact(message.contactId);
 
-      showContactOnlineToast(contact.username, true, message.message);
+      if (message.type === "chatMessage") {
+        const contact = getContact(message.userId);
+
+        notificationToast(contact.username, true, message.message);
+      }
     },
   });
 
-  const toggleChat = (contactId: string, isChatOpen: boolean): void => {
+  const toggleChatNotification = (contactId: string, isChatOpen: boolean): void => {
     contactNotificationSocket.send(
       JSON.stringify({
         type: "chatToggle",
-        opened: !isChatOpen,
+        opened: isChatOpen,
         contactId: contactId,
       }),
     );
   };
 
-  return {toggleChat};
+  return {toggleChatNotification};
 };
 
 export const useUserStatusSubscription = (
   user: User,
-  showContactOnlineToast: (username: string, isMessage: boolean, message?: string) => void,
+  notificationToast: (username: string, isMessage: boolean, message?: string) => void,
 ) => {
   const {contacts, setContacts, getContact} = useContacts();
 
@@ -74,7 +77,7 @@ export const useUserStatusSubscription = (
         const contact = getContact(user_id);
 
         if (contact.status !== UserStatus.Online && status === UserStatus.Online) {
-          showContactOnlineToast(contact.username, false);
+          notificationToast(contact.username, false);
         }
 
         // update the updated contact with the new status
@@ -97,5 +100,5 @@ export const useUserStatusSubscription = (
     return () => {
       statusChannel?.unsubscribe();
     };
-  }, [contacts, setContacts, user, showContactOnlineToast, getContact]);
+  }, [contacts, setContacts, user, notificationToast, getContact]);
 };

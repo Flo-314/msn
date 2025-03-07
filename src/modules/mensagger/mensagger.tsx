@@ -3,7 +3,7 @@ import UserHeader from "./userHeader/UserHeader";
 import AddContactButton from "./contactList/addContactButton";
 import ContactList from "./contactList/contactList";
 import Ad from "./Ad";
-import {ChatInstance, User} from "@/types/types";
+import {User} from "@/types/types";
 import {useChatInstances} from "@/lib/hooks/chatsContext";
 import Image from "next/image";
 import {useChatNotification, useUserStatusSubscription} from "@/lib/hooks/notifications";
@@ -12,9 +12,9 @@ import NotificationToast from "@/lib/common/toast";
 import {useCallback} from "react";
 
 function Mensagger({user}: {user: User}) {
-  const {setChatInstances, chatInstances} = useChatInstances();
+  const {openChat} = useChatInstances();
 
-  const showContactOnlineToast = useCallback(
+  const notificationToast = useCallback(
     (username: string, isMessage: boolean, message?: string) => {
       toast(
         ({closeToast}) => (
@@ -40,29 +40,14 @@ function Mensagger({user}: {user: User}) {
     [],
   );
 
-  const {toggleChat} = useChatNotification(user, showContactOnlineToast);
+  const {toggleChatNotification} = useChatNotification(user, notificationToast);
 
-  useUserStatusSubscription(user, showContactOnlineToast);
+  useUserStatusSubscription(user, notificationToast);
   const handleOpenChat = (contactId: string) => {
-    const chatInstance: ChatInstance = {userId: user.id, contactId};
-    const isChatOpen = chatInstances.some((cInstance) => {
-      return cInstance.userId === chatInstance.userId && cInstance.contactId === contactId;
-    });
+    const isChatOpen = openChat(contactId, user.id);
 
-    //if the chat isnt open, it opens one and send a notification of the event to the websocket.
-    if (!isChatOpen) {
-      setChatInstances([...chatInstances, chatInstance]);
-      toggleChat(contactId, isChatOpen);
-    } else {
-      //if the chat is open we close the chat. the event notification is sended in the component ondestroy
-      setChatInstances(
-        chatInstances.filter(
-          (cInstance) =>
-            cInstance.userId !== chatInstance.userId || cInstance.contactId !== contactId,
-        ),
-      );
-
-      toggleChat(contactId, isChatOpen);
+    if (isChatOpen === false) {
+      toggleChatNotification(contactId, true);
     }
   };
 

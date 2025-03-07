@@ -75,7 +75,7 @@ export function ChatProvider({
     };
 
     chatPartySocket.send(JSON.stringify(newMessage));
-    contactNotificationSocket.send(JSON.stringify(newMessage));
+    contactNotificationSocket.send(JSON.stringify({...newMessage, type: "chatMessage"}));
 
     insertMessage(userId, contactId, text);
 
@@ -104,7 +104,7 @@ export function ChatProvider({
         contact,
         handleChange,
         handleSend,
-        closeChatInstance: () => closeChatInstance(contactId),
+        closeChatInstance: () => closeChatInstance(contactId, messages),
       }}
     >
       {children}

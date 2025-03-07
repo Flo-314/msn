@@ -67,13 +67,14 @@ export default class Server implements Party.Server {
 
     try {
       parsedMsg = JSON.parse(message);
+      console.log(parsedMsg, this.openedChats);
     } catch {
       return;
     }
 
     switch (parsedMsg.type) {
       case "chatMessage":
-        const isChatOppened = this.openedChats.has(parsedMsg.contactId);
+        const isChatOppened = this.openedChats.has(parsedMsg.userId);
 
         if (isChatOppened === false) {
           //Send notification to RoomOwner
@@ -82,7 +83,7 @@ export default class Server implements Party.Server {
         break;
 
       case "chatToggle":
-        if (parsedMsg.opened) {
+        if (parsedMsg.opened === true) {
           this.openedChats.add(parsedMsg.contactId);
         } else {
           this.openedChats.delete(parsedMsg.contactId);
@@ -90,7 +91,6 @@ export default class Server implements Party.Server {
 
         break;
       case "newContact":
-        parsedMsg.contactId = parsedMsg.id;
         roomOwnerConnection?.send(message);
         break;
 

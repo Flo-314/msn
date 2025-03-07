@@ -22,6 +22,7 @@ export type Contact = {
 export type ChatInstance = {
   userId: string;
   contactId: string;
+  isOpen: boolean;
   messages: Message[];
 };
 
@@ -39,11 +40,7 @@ export type Message = {
   createdAt: string;
 };
 
-export type MessageNotification = {
-  type: "chatMessage";
-  contactId: string;
-  message: string;
-};
+export type MessageNotification = Message & {type: "chatMessage"};
 
 export type ChatToggle = {
   type: "chatToggle";
