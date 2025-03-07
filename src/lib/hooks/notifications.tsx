@@ -13,7 +13,7 @@ export const useChatNotification = (
   showContactOnlineToast: (username: string, isMessage: boolean, message?: string) => void,
 ) => {
   const savedStatus = localStorage.getItem("status") as UserStatus;
-  const {getContact, syncNewContact, setContacts} = useContacts();
+  const {getContact, setContacts} = useContacts();
 
   const contactNotificationSocket = usePartySocket({
     host: partykitUrl,
