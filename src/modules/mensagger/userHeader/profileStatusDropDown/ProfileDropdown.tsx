@@ -22,7 +22,7 @@ export default function ProfileDropdown() {
   return (
     <div className="flex flex-col gap-1 mt-1 relative w-fit">
       <div
-        className={`relative flex text-xs gap-2 px-1 border cursor-pointer hover:border-blue-dark hover:bg-gray-light ${isProfileDropdownOpen ? "bg-gray-light border-blue-dark" : "border-transparent bg-transparent"}`}
+        className={`relative flex text-xs gap-2  border cursor-pointer hover:border-blue-dark hover:bg-gray-light ${isProfileDropdownOpen ? "bg-gray-light border-blue-dark" : "border-transparent bg-transparent"}`}
       >
         <EditableText
           text={user?.username || ""}
