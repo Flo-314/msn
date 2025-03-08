@@ -2,7 +2,7 @@ import {createClient} from "@supabase/supabase-js";
 
 import type * as Party from "partykit/server";
 import {Database} from "../database.types";
-import {NotificationMessage, UserStatus} from "@/types/types";
+import {NewContact, NotificationMessage, UserStatus} from "@/types/types";
 
 const supabase = createClient<Database>(
   process.env.NEXT_PUBLIC_SUPABASE_URL as string,
@@ -28,11 +28,20 @@ const supabase = createClient<Database>(
 //                        sends a notification to the roomOwner.
 //
 //  chatToggle: sended by roomOwner when they open a chat.
+//
+//  newContact: User A(lf) adds partyroomOwner as a contact.
+//              User A(lf) sends a notification to the roomOwner with his user profile.
+//              RoomOwner receives the notification and updates his contact list with A(LF).
+//
+//
+//
+//
 
 export default class Server implements Party.Server {
-  private openedChats: Set<string> = new Set(); // Evita duplicados
+  private openedChatInstances: Set<string> = new Set(); // Evita duplicados
   constructor(readonly room: Party.Room) {}
   onConnect(connection: Party.Connection, ctx: Party.ConnectionContext): void | Promise<void> {
+    //When a user connects to the room, update the user_status to online.
     const initialStatus =
       (new URL(ctx.request.url).searchParams.get("initialStatus") as UserStatus) ?? "online";
 
@@ -45,11 +54,12 @@ export default class Server implements Party.Server {
           .eq("user_id", connection.id);
 
         if (error) {
-          console.error("Error updating status:", error); // Evita romper el Worker
+          console.error("Error updating status:", error);
         }
       }, 500);
     }
   }
+
   onMessage(message: string) {
     const roomOwnerConnection = this.room.getConnection(this.room.id);
 
@@ -63,11 +73,7 @@ export default class Server implements Party.Server {
 
     switch (parsedMsg.type) {
       case "chatMessage":
-        console.log(this.openedChats, parsedMsg.contactId);
-
-        const isChatOppened = this.openedChats.has(parsedMsg.contactId);
-
-        console.log(isChatOppened);
+        const isChatOppened = this.openedChatInstances.has(parsedMsg.userId);
 
         if (isChatOppened === false) {
           //Send notification to RoomOwner
@@ -75,33 +81,45 @@ export default class Server implements Party.Server {
         }
         break;
 
-      case "chatToggle":
-        console.log(this.openedChats);
-
-        if (parsedMsg.opened) {
-          this.openedChats.add(parsedMsg.contactId);
-        } else {
-          this.openedChats.delete(parsedMsg.contactId);
-        }
-        console.log(this.openedChats);
+      case "chatInstancesUpdate":
+        this.openedChatInstances = new Set([...parsedMsg.chatsInstances]);
+        console.log(parsedMsg, this.openedChatInstances);
 
         break;
+      case "newContact":
+        roomOwnerConnection?.send(message);
+        break;
+
       default:
         break;
+    }
+  }
+
+  async onRequest(req: Party.Request) {
+    if (req.method === "POST") {
+      const newContact = await req.json<NewContact>();
+      const roomOwnerConnection = this.room.getConnection(this.room.id);
+
+      newContact.contactId = newContact.id;
+      roomOwnerConnection?.send(JSON.stringify(newContact));
+
+      return new Response("OK");
+    } else {
+      return new Response("Method not allowed", {status: 405});
     }
   }
 
   async onClose(connection: Party.Connection): Promise<void> {
     //If the room owner disconnect, change the user_status to offline.
     if (connection.id === this.room?.id) {
-      this.openedChats.clear();
+      this.openedChatInstances.clear();
       const {error} = await supabase
         .from("user_status")
         .update({status: "offline"})
         .eq("user_id", connection.id);
 
       if (error) {
-        console.error("Error updating status:", error); // Evita romper el Worker
+        console.error("Error updating status:", error);
       }
     }
   }

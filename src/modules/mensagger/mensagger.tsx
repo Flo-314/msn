@@ -3,9 +3,7 @@ import UserHeader from "./userHeader/UserHeader";
 import AddContactButton from "./contactList/addContactButton";
 import ContactList from "./contactList/contactList";
 import Ad from "./Ad";
-import {ChatInstance, User} from "@/types/types";
-import {useChatInstances} from "@/lib/hooks/chatsContext";
-import {useContacts} from "@/lib/hooks/contactsContext";
+import {User} from "@/types/types";
 import Image from "next/image";
 import {useChatNotification, useUserStatusSubscription} from "@/lib/hooks/notifications";
 import {Slide, ToastContainer, toast} from "react-toastify";
@@ -13,10 +11,7 @@ import NotificationToast from "@/lib/common/toast";
 import {useCallback} from "react";
 
 function Mensagger({user}: {user: User}) {
-  const {contacts} = useContacts();
-  const {setChatInstances, chatInstances} = useChatInstances();
-
-  const showContactOnlineToast = useCallback(
+  const notificationToast = useCallback(
     (username: string, isMessage: boolean, message?: string) => {
       toast(
         ({closeToast}) => (
@@ -38,38 +33,13 @@ function Mensagger({user}: {user: User}) {
           transition: Slide,
         },
       );
-      const contactOnlineNotification = new Audio("/sounds/onlineNotification.wav");
-
-      contactOnlineNotification.play();
     },
     [],
   );
 
-  const {toggleChat} = useChatNotification(user, showContactOnlineToast);
+  useChatNotification(user, notificationToast);
 
-  useUserStatusSubscription(user, showContactOnlineToast);
-  const handleOpenChat = (contactId: string) => {
-    const chatInstance: ChatInstance = {userId: user.id, contactId};
-    const isChatOpen = chatInstances.some((cInstance) => {
-      return cInstance.userId === chatInstance.userId && cInstance.contactId === contactId;
-    });
-
-    //if the chat isnt open, it opens one and send a notification of the event to the websocket.
-    if (!isChatOpen) {
-      setChatInstances([...chatInstances, chatInstance]);
-      toggleChat(contactId, isChatOpen);
-    } else {
-      //if the chat is open we close the chat. the event notification is sended in the component ondestroy
-      setChatInstances(
-        chatInstances.filter(
-          (cInstance) =>
-            cInstance.userId !== chatInstance.userId || cInstance.contactId !== contactId,
-        ),
-      );
-
-      toggleChat(contactId, isChatOpen);
-    }
-  };
+  useUserStatusSubscription(user, notificationToast);
 
   return (
     <Window windowHeaderName="MSN Messenger">
@@ -90,9 +60,9 @@ function Mensagger({user}: {user: User}) {
           </div>
 
           <div className=" border-black  bg-msnLightGray">
-            <AddContactButton userId={user.id}></AddContactButton>
+            <AddContactButton></AddContactButton>
             <div className="">
-              <ContactList contacts={contacts} handleOpenChat={handleOpenChat}></ContactList>
+              <ContactList></ContactList>
               <Ad></Ad>
             </div>
           </div>

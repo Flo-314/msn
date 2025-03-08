@@ -21,7 +21,7 @@ function ChatMessages() {
         {messages.map(({message, contactId}, i) => (
           <div key={i} className="">
             <p className="text-winBlue text-wrap">
-              {contactId === contact.contactId ? contact.username : user?.username} says:{" "}
+              {contactId !== contact.contactId ? contact.username : user?.username} says:
             </p>
             <p className="text-violet-950 text-wrap ml-6">{message}</p>
           </div>

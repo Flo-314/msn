@@ -10,7 +10,12 @@ function ChatWindow() {
   const {closeChatInstance, contact} = useChat();
 
   return (
-    <Window onClose={closeChatInstance} windowHeaderName={contact.username + " - Conversation"}>
+    <Window
+      onClose={() => {
+        closeChatInstance();
+      }}
+      windowHeaderName={contact.username + " - Conversation"}
+    >
       <div
         className="w-[475px] h-[400px] grid grid-rows-[60px_1fr_140px_24px] rounded-[6px] overflow-hidden shadow-[2px_2px_5px_#0009,_5px_5px_10px_#000c] relative"
         style={{

@@ -5,7 +5,8 @@ import React, {createContext, useState, useContext, ReactNode, useEffect} from "
 import {Session} from "@supabase/supabase-js";
 import {supabase} from "../utils/supabase/client";
 import {useUser} from "./userContext";
-import {getProfileById} from "../supabase/models";
+import {fetchUserStatus, getProfileById} from "../supabase/models";
+import {UserStatus} from "@/types/types";
 
 const SessionContext = createContext<{
   session: Session | null;
@@ -18,16 +19,30 @@ export const SessionProvider = ({children}: {children: ReactNode}) => {
   const {user, setUser} = useUser();
 
   useEffect(() => {
-    const authStateListener = supabase.auth.onAuthStateChange((_, newSession) => {
+    const handleAuthStateChange = async (_: string, newSession: Session | null) => {
       if (session || user) return;
       setSession(newSession);
       const sessionUser = newSession?.user;
 
       if (sessionUser?.id && sessionUser?.email && !user) {
-        getProfileById(sessionUser.id).then((profile) => {
-          setUser({id: sessionUser.id, email: sessionUser.email ?? "", username: profile.username});
+        const baseStatus = window.localStorage.getItem("status") as UserStatus | undefined;
+
+        const userStatus = await fetchUserStatus(sessionUser.id);
+
+        const profile = await getProfileById(sessionUser.id);
+
+        setUser({
+          id: sessionUser.id,
+          email: sessionUser.email ?? "",
+          username: profile.username ?? "",
+          status: baseStatus ?? UserStatus.Offline,
+          personalMessage: userStatus.personal_message ?? "",
         });
       }
+    };
+
+    const authStateListener = supabase.auth.onAuthStateChange((_, newSession) => {
+      handleAuthStateChange(_, newSession);
     });
 
     return () => {

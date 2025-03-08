@@ -1,6 +1,8 @@
 REFACTORS:
 
 FEATURES: -auth check en cada conección a partykit
+-Que storie en algun state los mensajes 
+-Infinite scroll para chat
 
 Posibles bugs: -USUARIOS PUEden agregarse a si mismo
   -Cuando se abre un chat, mensagger envia una señal para que se sepa que este chat esta abierto. si <Chat> se cierra

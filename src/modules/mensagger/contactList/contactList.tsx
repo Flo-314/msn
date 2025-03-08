@@ -1,15 +1,12 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Contact, UserStatus} from "@/types/types";
 import ContactCard from "./contactCard";
 import ContactGroupSeparator from "./GroupListSeparator";
+import {useContacts} from "@/lib/hooks/contactsContext";
 
-function ContactList({
-  contacts,
-  handleOpenChat,
-}: {
-  contacts: Contact[];
-  handleOpenChat: (contactId: string) => void;
-}) {
+function ContactList() {
+  const {contacts} = useContacts();
+
   const [collapsedGroups, setCollapsedGroups] = useState<Record<UserStatus, boolean>>({
     online: false,
     away: false,
@@ -21,12 +18,23 @@ function ContactList({
     setCollapsedGroups((prev) => ({...prev, [status]: !prev[status]}));
   };
 
-  const groupedContacts: Record<UserStatus, Contact[]> = {
-    online: contacts.filter((c) => c.status === UserStatus.Online),
-    away: contacts.filter((c) => c.status === UserStatus.Away),
-    busy: contacts.filter((c) => c.status === UserStatus.Busy),
-    offline: contacts.filter((c) => c.status === UserStatus.Offline),
-  };
+  const [groupedContacts, setGroupedContacts] = useState<Record<UserStatus, Contact[]>>({
+    online: [],
+    away: [],
+    busy: [],
+    offline: [],
+  });
+
+  useEffect(() => {
+    const newGroupedContacts: Record<UserStatus, Contact[]> = {
+      online: contacts.filter((c) => c.status === UserStatus.Online),
+      away: contacts.filter((c) => c.status === UserStatus.Away),
+      busy: contacts.filter((c) => c.status === UserStatus.Busy),
+      offline: contacts.filter((c) => c.status === UserStatus.Offline),
+    };
+
+    setGroupedContacts(newGroupedContacts);
+  }, [contacts]);
 
   return (
     <div className="overflow-y-auto h-60 bg-white flex flex-col p-1">
@@ -48,8 +56,8 @@ function ContactList({
                       username={contact.username}
                       email={contact.email}
                       contactId={contact.contactId}
-                      handleOpenChat={handleOpenChat}
                       status={contact.status}
+                      personalMessage={contact.personalMessage}
                     />
                   ))}
                 </div>

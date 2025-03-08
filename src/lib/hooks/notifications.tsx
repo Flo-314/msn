@@ -2,18 +2,20 @@
 
 import usePartySocket from "partysocket/react";
 import {partykitUrl} from "../utils/partykit/partykitUtils";
-import {Message, User, UserStatus} from "@/types/types";
+import {ChatInstanceUpdate, Message, NewContact, User, UserStatus} from "@/types/types";
 import {useEffect} from "react";
 import {RealtimeChannel} from "@supabase/supabase-js";
 import {useContacts} from "./contactsContext";
 import {createStatusChannel} from "../supabase/subscriptions";
+import {useChatInstances} from "./chatsContext";
 
 export const useChatNotification = (
   user: User,
-  showContactOnlineToast: (username: string, isMessage: boolean, message?: string) => void,
+  notificationToast: (username: string, isMessage: boolean, message?: string) => void,
 ) => {
   const savedStatus = localStorage.getItem("status") as UserStatus;
-  const {getContact} = useContacts();
+  const {getContact, setContacts} = useContacts();
+  const {chatInstances} = useChatInstances();
 
   const contactNotificationSocket = usePartySocket({
     host: partykitUrl,
@@ -24,32 +26,42 @@ export const useChatNotification = (
       return {initialStatus: savedStatus ?? "connected", token: null};
     },
 
-    onMessage(messageEvent) {
-      const message: Message = JSON.parse(messageEvent.data);
-      const notificationSound = new Audio("/sounds/incomingMessage.mp3");
-      const contact = getContact(message.contactId);
+    async onMessage(messageEvent) {
+      const message: (Message & {type: "chatMessage"}) | NewContact = JSON.parse(messageEvent.data);
 
-      notificationSound.play();
-      showContactOnlineToast(contact.username, true, message.message);
+      if (message.type === "newContact") {
+        const newContact = message as NewContact;
+
+        setContacts((prev) => [...prev, newContact]);
+
+        return;
+      }
+
+      if (message.type === "chatMessage") {
+        const contact = getContact(message.userId);
+
+        notificationToast(contact.username, true, message.message);
+      }
     },
   });
 
-  const toggleChat = (contactId: string, isChatOpen: boolean): void => {
-    contactNotificationSocket.send(
-      JSON.stringify({
-        type: "chatToggle",
-        opened: !isChatOpen,
-        contactId: contactId,
-      }),
-    );
-  };
+  useEffect(() => {
+    if (!chatInstances || !contactNotificationSocket) return;
 
-  return {toggleChat};
+    const chatInstancesUpdate: ChatInstanceUpdate = {
+      type: "chatInstancesUpdate",
+      chatsInstances: chatInstances
+        .filter(({isOpen}) => isOpen === true)
+        .map(({contactId}) => contactId),
+    };
+
+    contactNotificationSocket.send(JSON.stringify(chatInstancesUpdate));
+  }, [chatInstances, contactNotificationSocket]);
 };
 
 export const useUserStatusSubscription = (
   user: User,
-  showContactOnlineToast: (username: string, isMessage: boolean, message?: string) => void,
+  notificationToast: (username: string, isMessage: boolean, message?: string) => void,
 ) => {
   const {contacts, setContacts, getContact} = useContacts();
 
@@ -68,7 +80,7 @@ export const useUserStatusSubscription = (
         const contact = getContact(user_id);
 
         if (contact.status !== UserStatus.Online && status === UserStatus.Online) {
-          showContactOnlineToast(contact.username, false);
+          notificationToast(contact.username, false);
         }
 
         // update the updated contact with the new status
@@ -91,5 +103,5 @@ export const useUserStatusSubscription = (
     return () => {
       statusChannel?.unsubscribe();
     };
-  }, [contacts, setContacts, user, showContactOnlineToast, getContact]);
+  }, [contacts, setContacts, user, notificationToast, getContact]);
 };
