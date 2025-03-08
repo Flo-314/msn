@@ -1,12 +1,13 @@
 "use client";
 
 import {ChatInstance, Message} from "@/types/types";
-import React, {createContext, useState, useContext, ReactNode, useEffect} from "react";
+import React, {createContext, useState, useContext, ReactNode} from "react";
 
 const ChatsInstancesContext = createContext<
   | {
       chatInstances: ChatInstance[];
       setChatInstances: React.Dispatch<React.SetStateAction<ChatInstance[]>>;
+      getChatInstance: (contactId: string) => ChatInstance | null;
       closeChatInstance: (contactId: string, messages: Message[]) => void;
       openChat: (contactId: string, userId: string) => boolean;
     }
@@ -14,7 +15,7 @@ const ChatsInstancesContext = createContext<
 >(undefined);
 
 export const ChatsInstancesProvider = ({children}: {children: ReactNode}) => {
-  const [chatsInstances, setChatInstances] = useState<ChatInstance[]>([]);
+  const [chatInstances, setChatInstances] = useState<ChatInstance[]>([]);
 
   const closeChatInstance = (contactId: string, messages: Message[]): void => {
     setChatInstances((prevInstances) =>
@@ -25,7 +26,7 @@ export const ChatsInstancesProvider = ({children}: {children: ReactNode}) => {
   };
 
   const openChat = (contactId: string, userId: string): boolean => {
-    const instanceExist = chatsInstances.some((cInstance) => {
+    const instanceExist = chatInstances.some((cInstance) => {
       return cInstance.contactId === contactId;
     });
 
@@ -40,7 +41,7 @@ export const ChatsInstancesProvider = ({children}: {children: ReactNode}) => {
 
       return false;
     }
-    const isOpen = chatsInstances.some((chatInstance) => {
+    const isOpen = chatInstances.some((chatInstance) => {
       return chatInstance.isOpen === true;
     });
 
@@ -53,16 +54,18 @@ export const ChatsInstancesProvider = ({children}: {children: ReactNode}) => {
 
     return false;
   };
+  const getChatInstance = (contactId: string): ChatInstance | null => {
+    const chatInstance = chatInstances.find((instance) => instance.contactId === contactId);
 
-  useEffect(() => {
-    console.log(chatsInstances);
-  }, [chatsInstances]);
+    return chatInstance || null;
+  };
 
   return (
     <ChatsInstancesContext.Provider
       value={{
-        chatInstances: chatsInstances,
+        chatInstances,
         openChat,
+        getChatInstance,
         setChatInstances: setChatInstances,
         closeChatInstance: closeChatInstance,
       }}

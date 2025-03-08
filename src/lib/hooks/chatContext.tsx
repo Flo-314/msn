@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import {createContext, useContext, useEffect, useState} from "react";
+import {createContext, useContext, useEffect, useRef, useState} from "react";
 
 import {Contact, Message} from "@/types/types";
 import {useChatInstances} from "@/lib/hooks/chatsContext";
@@ -33,12 +33,16 @@ export function ChatProvider({
   userId: string;
   contactId: string;
 }) {
-  const {closeChatInstance} = useChatInstances();
+  const {getContact} = useContacts();
+  const contact = getContact(contactId);
+
+  const {closeChatInstance, getChatInstance} = useChatInstances();
+  const chatInstance = getChatInstance(contact.contactId);
+  const initialLoad = useRef<boolean>(false);
+
   const [text, setText] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
-  const {getContact} = useContacts();
   const {user} = useUser();
-  const contact = getContact(contactId);
 
   const chatPartySocket = usePartySocket({
     host: partykitUrl,
@@ -84,26 +88,40 @@ export function ChatProvider({
   };
 
   useEffect(() => {
-    if (!user || !contact) return;
-    const loadChatHistory = () => {
-      getMessages(contact.contactId, user.id, 50).then((messages) => {
-        if (!messages) return;
-        setMessages(messages);
-      });
-    };
+    if (!user?.id || !contact.contactId || !chatInstance) return;
 
-    loadChatHistory();
-  }, [user, contact]);
+    if (initialLoad.current === false) {
+      initialLoad.current = true;
+
+      const loadChatHistory = async () => {
+        const instanceMessages = chatInstance?.messages;
+
+        let loadedMessages: Message[];
+
+        if (instanceMessages?.length === 0) {
+          loadedMessages = (await getMessages(contact.contactId, user.id, 50)) ?? [];
+        } else {
+          loadedMessages = instanceMessages;
+        }
+
+        setMessages(loadedMessages);
+      };
+
+      loadChatHistory();
+    }
+  }, [contact.contactId, user?.id, chatInstance]);
 
   return (
     <ChatContext.Provider
       value={{
         text,
         setText,
-        messages,
-        contact,
         handleChange,
         handleSend,
+
+        messages,
+        contact,
+
         closeChatInstance: () => closeChatInstance(contactId, messages),
       }}
     >
