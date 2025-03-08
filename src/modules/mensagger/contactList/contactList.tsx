@@ -4,7 +4,7 @@ import ContactCard from "./contactCard";
 import ContactGroupSeparator from "./GroupListSeparator";
 import {useContacts} from "@/lib/hooks/contactsContext";
 
-function ContactList({handleOpenChat}: {handleOpenChat: (contactId: string) => void}) {
+function ContactList() {
   const {contacts} = useContacts();
 
   const [collapsedGroups, setCollapsedGroups] = useState<Record<UserStatus, boolean>>({
@@ -56,7 +56,6 @@ function ContactList({handleOpenChat}: {handleOpenChat: (contactId: string) => v
                       username={contact.username}
                       email={contact.email}
                       contactId={contact.contactId}
-                      handleOpenChat={handleOpenChat}
                       status={contact.status}
                       personalMessage={contact.personalMessage}
                     />

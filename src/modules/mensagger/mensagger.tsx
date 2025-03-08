@@ -4,7 +4,6 @@ import AddContactButton from "./contactList/addContactButton";
 import ContactList from "./contactList/contactList";
 import Ad from "./Ad";
 import {User} from "@/types/types";
-import {useChatInstances} from "@/lib/hooks/chatsContext";
 import Image from "next/image";
 import {useChatNotification, useUserStatusSubscription} from "@/lib/hooks/notifications";
 import {Slide, ToastContainer, toast} from "react-toastify";
@@ -12,8 +11,6 @@ import NotificationToast from "@/lib/common/toast";
 import {useCallback} from "react";
 
 function Mensagger({user}: {user: User}) {
-  const {openChat} = useChatInstances();
-
   const notificationToast = useCallback(
     (username: string, isMessage: boolean, message?: string) => {
       toast(
@@ -40,16 +37,9 @@ function Mensagger({user}: {user: User}) {
     [],
   );
 
-  const {toggleChatNotification} = useChatNotification(user, notificationToast);
+  useChatNotification(user, notificationToast);
 
   useUserStatusSubscription(user, notificationToast);
-  const handleOpenChat = (contactId: string) => {
-    const isChatOpen = openChat(contactId, user.id);
-
-    if (isChatOpen === false) {
-      toggleChatNotification(contactId, true);
-    }
-  };
 
   return (
     <Window windowHeaderName="MSN Messenger">
@@ -72,7 +62,7 @@ function Mensagger({user}: {user: User}) {
           <div className=" border-black  bg-msnLightGray">
             <AddContactButton></AddContactButton>
             <div className="">
-              <ContactList handleOpenChat={handleOpenChat}></ContactList>
+              <ContactList></ContactList>
               <Ad></Ad>
             </div>
           </div>

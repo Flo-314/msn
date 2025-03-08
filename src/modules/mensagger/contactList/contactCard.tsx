@@ -1,24 +1,22 @@
 import {Contact} from "@/types/types";
 import {StatusIcon} from "./StatusIcon";
+import {useChatInstances} from "@/lib/hooks/chatsContext";
+import {useUser} from "@/lib/hooks/userContext";
 
-type ContactCardProps = Contact & {
-  handleOpenChat: (contactId: string) => void;
-};
+type ContactCardProps = Contact;
 
-function ContactCard({
-  contactId,
-  username,
-  handleOpenChat,
-  status,
-  personalMessage,
-}: ContactCardProps) {
+function ContactCard({contactId, username, status, personalMessage}: ContactCardProps) {
+  const {openChat} = useChatInstances();
+  const {user} = useUser();
+
   return (
     <div className="flex items-center gap-2  rounded ml-4">
       <StatusIcon userStatus={status}></StatusIcon>
       <div
         className="text-xs "
         onClick={() => {
-          handleOpenChat(contactId);
+          if (!user) return;
+          openChat(contactId, user.id);
         }}
       >
         <span className="text-gray-800">{username}</span>

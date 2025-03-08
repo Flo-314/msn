@@ -42,15 +42,11 @@ export type Message = {
 
 export type MessageNotification = Message & {type: "chatMessage"};
 
-export type ChatToggle = {
-  type: "chatToggle";
-  contactId: string;
-  opened: boolean;
-};
-
 export type NewContact = User & {type: "newContact"; contactId: string};
 
-export type NotificationMessage = MessageNotification | ChatToggle | NewContact;
+export type ChatInstanceUpdate = {type: "chatInstancesUpdate"; chatsInstances: string[]};
+
+export type NotificationMessage = MessageNotification | NewContact | ChatInstanceUpdate;
 
 export enum statusIcons {
   Online = "/icons/contact/connectedContactIcon.png",

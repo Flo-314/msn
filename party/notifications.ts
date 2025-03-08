@@ -38,7 +38,7 @@ const supabase = createClient<Database>(
 //
 
 export default class Server implements Party.Server {
-  private openedChats: Set<string> = new Set(); // Evita duplicados
+  private openedChatInstances: Set<string> = new Set(); // Evita duplicados
   constructor(readonly room: Party.Room) {}
   onConnect(connection: Party.Connection, ctx: Party.ConnectionContext): void | Promise<void> {
     //When a user connects to the room, update the user_status to online.
@@ -67,14 +67,13 @@ export default class Server implements Party.Server {
 
     try {
       parsedMsg = JSON.parse(message);
-      console.log(parsedMsg, this.openedChats);
     } catch {
       return;
     }
 
     switch (parsedMsg.type) {
       case "chatMessage":
-        const isChatOppened = this.openedChats.has(parsedMsg.userId);
+        const isChatOppened = this.openedChatInstances.has(parsedMsg.userId);
 
         if (isChatOppened === false) {
           //Send notification to RoomOwner
@@ -82,12 +81,9 @@ export default class Server implements Party.Server {
         }
         break;
 
-      case "chatToggle":
-        if (parsedMsg.opened === true) {
-          this.openedChats.add(parsedMsg.contactId);
-        } else {
-          this.openedChats.delete(parsedMsg.contactId);
-        }
+      case "chatInstancesUpdate":
+        this.openedChatInstances = new Set([...parsedMsg.chatsInstances]);
+        console.log(parsedMsg, this.openedChatInstances);
 
         break;
       case "newContact":
@@ -116,7 +112,7 @@ export default class Server implements Party.Server {
   async onClose(connection: Party.Connection): Promise<void> {
     //If the room owner disconnect, change the user_status to offline.
     if (connection.id === this.room?.id) {
-      this.openedChats.clear();
+      this.openedChatInstances.clear();
       const {error} = await supabase
         .from("user_status")
         .update({status: "offline"})

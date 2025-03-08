@@ -2,11 +2,12 @@
 
 import usePartySocket from "partysocket/react";
 import {partykitUrl} from "../utils/partykit/partykitUtils";
-import {Message, NewContact, User, UserStatus} from "@/types/types";
+import {ChatInstanceUpdate, Message, NewContact, User, UserStatus} from "@/types/types";
 import {useEffect} from "react";
 import {RealtimeChannel} from "@supabase/supabase-js";
 import {useContacts} from "./contactsContext";
 import {createStatusChannel} from "../supabase/subscriptions";
+import {useChatInstances} from "./chatsContext";
 
 export const useChatNotification = (
   user: User,
@@ -14,6 +15,7 @@ export const useChatNotification = (
 ) => {
   const savedStatus = localStorage.getItem("status") as UserStatus;
   const {getContact, setContacts} = useContacts();
+  const {chatInstances} = useChatInstances();
 
   const contactNotificationSocket = usePartySocket({
     host: partykitUrl,
@@ -43,17 +45,18 @@ export const useChatNotification = (
     },
   });
 
-  const toggleChatNotification = (contactId: string, isChatOpen: boolean): void => {
-    contactNotificationSocket.send(
-      JSON.stringify({
-        type: "chatToggle",
-        opened: isChatOpen,
-        contactId: contactId,
-      }),
-    );
-  };
+  useEffect(() => {
+    if (!chatInstances || !contactNotificationSocket) return;
 
-  return {toggleChatNotification};
+    const chatInstancesUpdate: ChatInstanceUpdate = {
+      type: "chatInstancesUpdate",
+      chatsInstances: chatInstances
+        .filter(({isOpen}) => isOpen === true)
+        .map(({contactId}) => contactId),
+    };
+
+    contactNotificationSocket.send(JSON.stringify(chatInstancesUpdate));
+  }, [chatInstances, contactNotificationSocket]);
 };
 
 export const useUserStatusSubscription = (
