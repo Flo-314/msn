@@ -12,14 +12,13 @@ export async function signIn(formData: FormData) {
     persistSession: formData.get("auto-login") === "on",
   };
 
-  //if (signData.persistSession === true) {
-  await supabase.auth.signInWithPassword(signData);
-  /*   } else {
-    const supabaseWithNoPersistSession = createNoPersistentClient();
+  const {error} = await supabase.auth.signInWithPassword(signData);
 
-    return await supabaseWithNoPersistSession.auth.signInWithPassword(signData);
+  if (error) {
+    return error;
   }
-} */
+
+  return true;
 }
 
 export async function signup(formData: FormData) {
@@ -33,5 +32,8 @@ export async function signup(formData: FormData) {
   const {error} = await supabase.auth.signUp(data);
 
   if (error) {
+    return error;
   }
+
+  return true;
 }

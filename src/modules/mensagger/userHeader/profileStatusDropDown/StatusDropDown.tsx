@@ -2,16 +2,15 @@
 
 import {useEffect, useRef} from "react";
 import DropDownCard from "./dropDownCard";
-import {useUser} from "@/lib/hooks/userContext";
-import {STATUS_OPTIONS} from "@/types/types";
+import {STATUS_OPTIONS, UserStatus} from "@/types/types";
 
 type WindowsDropDownProps = {
   onClose: () => void;
+  onUpdateUserStatus: (userStatus: UserStatus) => void;
+  isLogin?: boolean;
 };
 
-function WindowsDropDown({onClose}: WindowsDropDownProps) {
-  const {updateUserStatus} = useUser();
-
+function StatusDropDown({onClose, onUpdateUserStatus, isLogin = false}: WindowsDropDownProps) {
   const dropdownRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
@@ -35,7 +34,7 @@ function WindowsDropDown({onClose}: WindowsDropDownProps) {
       {STATUS_OPTIONS.map((option, index) => (
         <DropDownCard
           onClick={() => {
-            updateUserStatus(option.status);
+            onUpdateUserStatus(option.status);
             onClose();
           }}
           key={index}
@@ -46,7 +45,7 @@ function WindowsDropDown({onClose}: WindowsDropDownProps) {
       <hr className="border-input" />
 
       <DropDownCard
-        text="Change My Display Picture..."
+        text={isLogin ? "Personal Settings" : "Change My Display Picture..."}
         onClick={() => {
           onClose();
         }}
@@ -56,4 +55,4 @@ function WindowsDropDown({onClose}: WindowsDropDownProps) {
   );
 }
 
-export default WindowsDropDown;
+export default StatusDropDown;

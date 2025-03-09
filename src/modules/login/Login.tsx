@@ -4,15 +4,17 @@ import {useEffect, useState} from "react";
 import Window from "../../lib/common/Window";
 import Image from "next/image";
 import {signIn, signup} from "@/lib/supabase/auth";
+import TriangleIcon from "@/lib/common/TriangleIcon";
+import StatusDropDown from "../mensagger/userHeader/profileStatusDropDown/StatusDropDown";
+import {UserStatus} from "@/types/types";
 
 export default function Login() {
   return (
     <div>
       <Window windowHeaderName="MSN">
-        <div className="mx-auto max-w-md p-2  rounded-sm bg-backforth-gradient ">
-          <LoginTop></LoginTop>
-          <div className="flex flex-col justify-center items-center">
-            <div className="    ">
+        <div className="mx-auto max-w-md p-2  rounded-sm bg-backforth-gradient px-4 w-96">
+          <div className="flex flex-col justify-center items-center mt-6  text-xs">
+            <div className="  mb-4  ">
               <Image
                 className="rounded-xl border-msnDarkGray border "
                 alt="msnLogin"
@@ -23,135 +25,98 @@ export default function Login() {
             </div>
 
             <LoginForm></LoginForm>
+            <LoginFooter></LoginFooter>
           </div>
-
-          <LoginFooter></LoginFooter>
         </div>
       </Window>
     </div>
   );
 }
 
-function LoginTop() {
-  return (
-    <div className="flex gap-3 items-center mb-7">
-      <Image src={"/png/login/msnLogo.png"} width={35} height={12} alt="msn logo"></Image>
-      <p className="bold text-[10px]">Messenger</p>
-    </div>
-  );
-}
-
 function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [status, setStatus] = useState("online");
-  const [isAutoLogin, setIsAutoLogin] = useState(false);
-  const [isLogging, setIsLogging] = useState(false);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [status, setStatus] = useState<UserStatus>(UserStatus.Online);
+  const [isAutoLogin, setIsAutoLogin] = useState<boolean>(false);
+  const [isLogging, setIsLogging] = useState<boolean>(false);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState<boolean>(false);
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
     setIsLogging(!isLogging);
   };
 
-  //load localstorage formdata
-  useEffect(() => {
-    const savedAutoLogin = localStorage.getItem("isAutoLogin");
-    const savedStatus = localStorage.getItem("status");
-
-    if (savedAutoLogin === "true") {
-      setIsAutoLogin(true);
-      setIsLogging(true);
-    }
-
-    if (savedStatus) {
-      setStatus(savedStatus);
-    }
-  }, []);
-
-  // Guardar isAutoLogin en localStorage cuando cambie
-  useEffect(() => {
-    localStorage.setItem("isAutoLogin", isAutoLogin.toString());
-  }, [isAutoLogin]);
-
-  // Guardar status en localStorage cuando cambie
-  useEffect(() => {
-    localStorage.setItem("status", status);
-  }, [status]);
-
   return (
-    <form onSubmit={handleSubmit} className="">
-      <div className="mb-1">
+    <form onSubmit={handleSubmit} className="text-darkLabel text-xs flex flex-col  justify-center">
+      <div className="mb-2">
         <label htmlFor="email" className="text-xs    text-darkLabel">
           Cuenta de correo electrónico:
         </label>
-        <div className="flex justify-center items-center gap-0.5">
+        <div className="flex justify-center  gap-0.5 h-6">
           <input
             id="email"
             type="email"
             name="email"
+            autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-1 py-0.5 text-sm   bg-none border border-inputGray"
+            className="w-full px-1    border border-blueToast-200 "
           />
-          <button className="text-center text-sm p-0.5  border border-inputGray">▼</button>
+          <button
+            type="button"
+            className="text-center 5    border px-1 bg-white border-blueToast-200"
+          >
+            <TriangleIcon></TriangleIcon>
+          </button>
         </div>
       </div>
 
-      <div className="">
-        <label htmlFor="password" className="text-xs    text-darkLabel">
+      <div>
+        <label htmlFor="password" className=" ">
           Password:
         </label>
         <input
+          autoComplete="password"
           name="password"
           id="password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full  border border-inputGray px-1 py-1 text-sm "
+          className="w-full    h-6 border border-blueToast-200  "
         />
       </div>
-
-      <div className="flex items-center text-darkLabel text-sm">
-        <label htmlFor="status" className=" ">
-          Status:
-        </label>
-        <select
-          id="status"
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
-          className=" bg-transparent "
-        >
-          <option value="online">Online</option>
-          <option value="busy">Busy</option>
-          <option value="away">Away</option>
-          <option value="offline">Appear Offline</option>
-        </select>
-      </div>
-
-      {isLogging ? (
-        <div className="max-w-16 my-3.5 mx-auto">
-          <Image height={96} width={72} src="/gif/login/login.GIF" alt="login loadin" />
-        </div>
-      ) : (
-        <div className=" text-sm my-3.5">
-          <div className="flex items-center gap-2">
-            <input type="checkbox" id="remember" className="h-4 w-4 rounded border-[#7B9EC7]" />
-            <label htmlFor="remember" className="text-[#000F35]">
-              Remember Me
-            </label>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              id="remember-password"
-              className="h-4 w-4 rounded border-[#7B9EC7]"
+      <div className="flex gap-2 my-2">
+        <label htmlFor="status">Status:</label>
+        <div className="relative">
+          <span
+            onClick={() => {
+              setIsProfileDropdownOpen(true);
+            }}
+            className={`text-xs capitalize  px-1.5  py-0.5 border cursor-pointer hover:border-blue-dark hover:bg-gray-light ${isProfileDropdownOpen ? "bg-gray-white border-blue-dark" : "border-transparent bg-transparent"}`}
+          >
+            {status}
+          </span>
+          {isProfileDropdownOpen && (
+            <StatusDropDown
+              isLogin={true}
+              onClose={() => {
+                setIsProfileDropdownOpen(false);
+              }}
+              onUpdateUserStatus={(status) => {
+                setStatus(status);
+                setIsProfileDropdownOpen(false);
+              }}
             />
-            <label htmlFor="remember-password" className="text-[#000F35]">
-              Remember my Password
-            </label>
+          )}
+        </div>
+      </div>
+      <div className="flex h-20">
+        {isLogging ? (
+          <div className="mx-auto ">
+            <Image height={75} width={69} src="/gif/login/login.GIF" alt="login loadin" />
+            <p>Signing in...</p>
           </div>
-
-          <div className="flex items-center gap-2">
+        ) : (
+          <div className="flex items-baseline  gap-0.5">
             <input
               name="auto-login"
               type="checkbox"
@@ -160,30 +125,30 @@ function LoginForm() {
               onChange={() => {
                 setIsAutoLogin(!isAutoLogin);
               }}
-              className="h-4 w-4 rounded border-[#7B9EC7]"
+              className=" rounded-none border-blueToast-200"
             />
-            <label htmlFor="auto-login" className="text-[#000F35]">
+            <label htmlFor="auto-login" className="text-darkLabel">
               Sign me in automatically
             </label>
           </div>
-        </div>
-      )}
-
-      <div className="flex">
+        )}
+      </div>
+      <div className="flex  justify-center">
         <button
-          formAction={signup}
-          type="submit"
-          className="rounded border border-[#7B9EC7] bg-gradient-to-b from-[#FEFEFE] to-[#E2E2E2] px-8 py-1 text-sm text-[#000F35] hover:from-[#E2E2E2] hover:to-[#FEFEFE] active:from-[#E2E2E2] active:to-[#E2E2E2]"
-        >
-          {isLogging ? "Cancelar" : "signup"}
-        </button>
+          formAction={async (formData) => {
+            console.log(formData);
 
-        <button
-          formAction={signIn}
+            const request = await signIn(formData);
+
+            if (request !== true) {
+              setIsLogging(false);
+            }
+          }}
           type="submit"
-          className="rounded border  border-[#7B9EC7] bg-gradient-to-b from-[#FEFEFE] to-[#E2E2E2] px-8 py-1 text-sm text-[#000F35] hover:from-[#E2E2E2] hover:to-[#FEFEFE] active:from-[#E2E2E2] active:to-[#E2E2E2]"
+          className=" border border-winBlue px-3 py-1 font-semibold    shadow-[inset_0_0_1px_1px_#F0A000,2px_2px_3px_rgba(0,0,0,0.4),4px_4px_5px_rgba(0,0,0,0.3)] "
+          style={{boxShadow: "inset 0 0 1px 1px #F0A000, 2px 2px 3px rgba(0, 0, 0, 0.4)"}}
         >
-          {isLogging ? "CANCELAR EL login" : "login"}
+          {isLogging ? "Cancel" : "Sign In"}
         </button>
       </div>
     </form>
@@ -191,19 +156,81 @@ function LoginForm() {
 }
 
 function LoginFooter() {
+  const [isCreatingAccount, setIsCreatingAccount] = useState<boolean>(false);
+
   return (
-    <div className="mt-6 flex justify-between text-sm">
+    <div className="mt-36 flex justify-between text-xs text-darkLabel w-full ">
       <div className="space-y-1">
-        <a href="#" className="block text-[#003797] hover:underline">
+        <a href="#" className="block ">
           Forgot your password?
         </a>
-        <a href="#" className="block text-[#003797] hover:underline">
+        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" className="block ">
           Service Status
         </a>
       </div>
-      <a href="#" className="text-[#003797] hover:underline">
+      <a
+        href="#"
+        onClick={() => {
+          setIsCreatingAccount(true);
+        }}
+      >
         Get a new account
       </a>
+
+      {isCreatingAccount && (
+        <Window windowHeaderName="¡Get a new account!" onClose={() => setIsCreatingAccount(false)}>
+          <div className="bg-gray-light px-6 py-4 flex flex-col">
+            <p>Please enter your email account information below</p>
+            <form
+              onSubmit={async (e) => {}}
+              className="text-darkLabel text-xs flex flex-col justify-center mt-4"
+            >
+              <div className="mb-2">
+                <label htmlFor="new-email" className="text-xs text-darkLabel">
+                  Email:
+                </label>
+                <input
+                  id="new-email"
+                  type="email"
+                  name="email"
+                  autoComplete="email"
+                  className="w-full px-1 border border-blueToast-200"
+                />
+              </div>
+              <div className="mb-2">
+                <label htmlFor="new-password" className="text-xs text-darkLabel">
+                  Password:
+                </label>
+                <input
+                  id="new-password"
+                  type="password"
+                  name="password"
+                  autoComplete="new-password"
+                  className="w-full px-1 border border-blueToast-200"
+                />
+              </div>
+              <div className="flex justify-center">
+                <button
+                  formAction={async (formData) => {
+                    console.log(formData);
+
+                    const request = await signup(formData);
+
+                    if (request === true) {
+                      setIsCreatingAccount(false);
+                    }
+                  }}
+                  type="submit"
+                  className="border border-winBlue px-3 py-1 font-semibold shadow-[inset_0_0_1px_1px_#F0A000,2px_2px_3px_rgba(0,0,0,0.4),4px_4px_5px_rgba(0,0,0,0.3)]"
+                  style={{boxShadow: "inset 0 0 1px 1px #F0A000, 2px 2px 3px rgba(0, 0, 0, 0.4)"}}
+                >
+                  Create Account
+                </button>
+              </div>
+            </form>
+          </div>
+        </Window>
+      )}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import {useState} from "react";
-import WindowsDropDown from "./windowsDropDown";
+import StatusDropDown from "./StatusDropDown";
 import {useUser} from "@/lib/hooks/userContext";
 import {STATUS_DESCRIPTIONS} from "@/types/types";
 import TriangleIcon from "@/lib/common/TriangleIcon";
@@ -10,7 +10,7 @@ import EditableText from "@/lib/common/EditableText";
 export default function ProfileDropdown() {
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
 
-  const {user, updateUsername} = useUser();
+  const {user, updateUsername, updateUserStatus} = useUser();
 
   const handleClose = () => {
     setIsProfileDropdownOpen(false);
@@ -41,7 +41,9 @@ export default function ProfileDropdown() {
           <TriangleIcon></TriangleIcon>
         </div>
       </div>
-      {isProfileDropdownOpen && <WindowsDropDown onClose={handleClose} />}
+      {isProfileDropdownOpen && (
+        <StatusDropDown onClose={handleClose} onUpdateUserStatus={updateUserStatus} />
+      )}
     </div>
   );
 }
