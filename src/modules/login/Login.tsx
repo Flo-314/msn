@@ -1,6 +1,6 @@
 "use client";
 
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import Window from "../../lib/common/Window";
 import Image from "next/image";
 import {signIn, signup} from "@/lib/supabase/auth";
@@ -41,7 +41,7 @@ function LoginForm() {
   const [isLogging, setIsLogging] = useState<boolean>(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState<boolean>(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = () => {
     setIsLogging(!isLogging);
   };
 
@@ -81,7 +81,7 @@ function LoginForm() {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full    h-6 border border-blueToast-200  "
+          className="w-full  px-1   h-6 border border-blueToast-200  "
         />
       </div>
       <div className="flex gap-2 my-2">
@@ -104,6 +104,7 @@ function LoginForm() {
               onUpdateUserStatus={(status) => {
                 setStatus(status);
                 setIsProfileDropdownOpen(false);
+                localStorage.setItem("status", status);
               }}
             />
           )}
@@ -123,6 +124,7 @@ function LoginForm() {
               id="auto-login"
               checked={isAutoLogin}
               onChange={() => {
+                localStorage.setItem("isAutoLogin", !isAutoLogin ? "true" : "false");
                 setIsAutoLogin(!isAutoLogin);
               }}
               className=" rounded-none border-blueToast-200"
@@ -136,8 +138,6 @@ function LoginForm() {
       <div className="flex  justify-center">
         <button
           formAction={async (formData) => {
-            console.log(formData);
-
             const request = await signIn(formData);
 
             if (request !== true) {
@@ -182,7 +182,7 @@ function LoginFooter() {
           <div className="bg-gray-light px-6 py-4 flex flex-col">
             <p>Please enter your email account information below</p>
             <form
-              onSubmit={async (e) => {}}
+              onSubmit={async () => {}}
               className="text-darkLabel text-xs flex flex-col justify-center mt-4"
             >
               <div className="mb-2">
@@ -212,8 +212,6 @@ function LoginFooter() {
               <div className="flex justify-center">
                 <button
                   formAction={async (formData) => {
-                    console.log(formData);
-
                     const request = await signup(formData);
 
                     if (request === true) {

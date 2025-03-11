@@ -23,7 +23,7 @@ export const useChatNotification = (
     room: user.id,
     id: user.id,
     query: () => {
-      return {initialStatus: savedStatus ?? "connected", token: null};
+      return {initialStatus: savedStatus ?? "online", token: null};
     },
 
     async onMessage(messageEvent) {
