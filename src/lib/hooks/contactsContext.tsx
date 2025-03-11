@@ -35,6 +35,7 @@ export const ContactsProvider = ({children}: {children: ReactNode}) => {
       const contactStatus = await fetchUserStatus(newContact.contactId);
 
       newContact.status = contactStatus.status as UserStatus;
+      newContact.personalMessage = contactStatus.personal_message;
       setContacts([...contacts, newContact]);
       triggerContactAddedNotification(newContact.contactId, user);
 

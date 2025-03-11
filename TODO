@@ -1,7 +1,7 @@
 REFACTORS:
 
 FEATURES: -auth check en cada conección a partykit
--Que storie en algun state los mensajes 
+  -zod check in every supabase request.
 -Infinite scroll para chat
 
 Posibles bugs: -USUARIOS PUEden agregarse a si mismo

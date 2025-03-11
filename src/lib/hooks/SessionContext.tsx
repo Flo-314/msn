@@ -1,6 +1,6 @@
 "use client";
 
-import React, {createContext, useState, useContext, ReactNode, useEffect} from "react";
+import React, {createContext, useState, useContext, ReactNode, useEffect, useRef} from "react";
 
 import {Session} from "@supabase/supabase-js";
 import {supabase} from "../utils/supabase/client";
@@ -17,8 +17,19 @@ const SessionContext = createContext<{
 export const SessionProvider = ({children}: {children: ReactNode}) => {
   const [session, setSession] = useState<Session | null>(null);
   const {user, setUser} = useUser();
+  // Just to manage when a user dont want to log in automatically
+  const firstLoad = useRef<boolean>(false);
 
   useEffect(() => {
+    if (firstLoad.current === false) {
+      const isAutoLogin: string | null = localStorage.getItem("isAutoLogin");
+
+      if (isAutoLogin !== "true") {
+        localStorage.removeItem("sb-akghrlumeubtskrxwkll-auth-token");
+      }
+      firstLoad.current = true;
+    }
+
     const handleAuthStateChange = async (_: string, newSession: Session | null) => {
       if (session || user) return;
       setSession(newSession);
